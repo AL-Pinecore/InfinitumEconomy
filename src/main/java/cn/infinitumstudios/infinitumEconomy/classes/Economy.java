@@ -7,416 +7,233 @@ import java.util.List;
 
 public class Economy implements net.milkbowl.vault.economy.Economy {
 
-    /**
-     * @return
-     */
     @Override
     public boolean isEnabled() {
         return false;
     }
 
-    /**
-     * @return
-     */
     @Override
     public String getName() {
         return null;
     }
 
-    /**
-     * @return
-     */
     @Override
     public boolean hasBankSupport() {
         return false;
     }
 
-    /**
-     * @return
-     */
     @Override
     public int fractionalDigits() {
         return 0;
     }
 
-    /**
-     * @param v
-     * @return
-     */
     @Override
-    public String format(double v) {
+    public String format(double value) {
         return null;
     }
 
-    /**
-     * @return
-     */
     @Override
     public String currencyNamePlural() {
         return null;
     }
 
-    /**
-     * @return
-     */
     @Override
     public String currencyNameSingular() {
         return null;
     }
 
-    /**
-     * @param s
-     * @deprecated
-     */
     @Override
-    public boolean hasAccount(String s) {
+    @Deprecated
+    public boolean hasAccount(String playerName) {
         return false;
     }
 
-    /**
-     * @param offlinePlayer
-     * @return
-     */
     @Override
     public boolean hasAccount(OfflinePlayer offlinePlayer) {
         return false;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @deprecated
-     */
     @Override
-    public boolean hasAccount(String s, String s1) {
+    public boolean hasAccount(String playerName, String playerUUID) {
         return false;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param s
-     * @return
-     */
     @Override
-    public boolean hasAccount(OfflinePlayer offlinePlayer, String s) {
+    @Deprecated
+    public boolean hasAccount(OfflinePlayer offlinePlayer, String playerName) {
         return false;
     }
 
-    /**
-     * @param s
-     * @deprecated
-     */
     @Override
-    public double getBalance(String s) {
+    @Deprecated
+    public double getBalance(String playerName) {
         return 0;
     }
 
-    /**
-     * @param offlinePlayer
-     * @return
-     */
     @Override
     public double getBalance(OfflinePlayer offlinePlayer) {
         return 0;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @deprecated
-     */
     @Override
-    public double getBalance(String s, String s1) {
+    public double getBalance(String playerName, String playerUUID) {
         return 0;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param s
-     * @return
-     */
     @Override
-    public double getBalance(OfflinePlayer offlinePlayer, String s) {
+    @Deprecated
+    public double getBalance(OfflinePlayer offlinePlayer, String playerName) {
         return 0;
     }
 
-    /**
-     * @param s
-     * @param v
-     * @deprecated
-     */
     @Override
-    public boolean has(String s, double v) {
+    @Deprecated
+    public boolean has(String playerName, double value) {
         return false;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param v
-     * @return
-     */
     @Override
-    public boolean has(OfflinePlayer offlinePlayer, double v) {
+    public boolean has(OfflinePlayer offlinePlayer, double value) {
         return false;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @param v
-     * @deprecated
-     */
     @Override
-    public boolean has(String s, String s1, double v) {
+    public boolean has(String playerName, String playerUUID, double value) {
         return false;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param s
-     * @param v
-     * @return
-     */
     @Override
-    public boolean has(OfflinePlayer offlinePlayer, String s, double v) {
+    @Deprecated
+    public boolean has(OfflinePlayer offlinePlayer, String playerName, double v) {
         return false;
     }
 
-    /**
-     * @param s
-     * @param v
-     * @deprecated
-     */
     @Override
-    public EconomyResponse withdrawPlayer(String s, double v) {
+    @Deprecated
+    public EconomyResponse withdrawPlayer(String playerName, double value) {
         return null;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param v
-     * @return
-     */
     @Override
-    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double v) {
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, double value) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @param v
-     * @deprecated
-     */
     @Override
-    public EconomyResponse withdrawPlayer(String s, String s1, double v) {
+    public EconomyResponse withdrawPlayer(String playerName, String playerUUID, double value) {
         return null;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param s
-     * @param v
-     * @return
-     */
     @Override
-    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String s, double v) {
+    @Deprecated
+    public EconomyResponse withdrawPlayer(OfflinePlayer offlinePlayer, String playerName, double value) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param v
-     * @deprecated
-     */
     @Override
-    public EconomyResponse depositPlayer(String s, double v) {
+    @Deprecated
+    public EconomyResponse depositPlayer(String playerName, double value) {
         return null;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param v
-     * @return
-     */
     @Override
-    public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double v) {
+    public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, double value) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @param v
-     * @deprecated
-     */
     @Override
-    public EconomyResponse depositPlayer(String s, String s1, double v) {
+    public EconomyResponse depositPlayer(String playerName, String playerUUID, double value) {
         return null;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param s
-     * @param v
-     * @return
-     */
     @Override
-    public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, String s, double v) {
+    @Deprecated
+    public EconomyResponse depositPlayer(OfflinePlayer offlinePlayer, String playerName, double value) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @deprecated
-     */
     @Override
-    public EconomyResponse createBank(String s, String s1) {
+    @Deprecated
+    public EconomyResponse createBank(String bankName, String playerName) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param offlinePlayer
-     * @return
-     */
     @Override
-    public EconomyResponse createBank(String s, OfflinePlayer offlinePlayer) {
+    public EconomyResponse createBank(String bankName, OfflinePlayer offlinePlayer) {
         return null;
     }
 
-    /**
-     * @param s
-     * @return
-     */
     @Override
-    public EconomyResponse deleteBank(String s) {
+    public EconomyResponse deleteBank(String bankName) {
         return null;
     }
 
-    /**
-     * @param s
-     * @return
-     */
     @Override
-    public EconomyResponse bankBalance(String s) {
+    public EconomyResponse bankBalance(String bankName) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param v
-     * @return
-     */
     @Override
-    public EconomyResponse bankHas(String s, double v) {
+    public EconomyResponse bankHas(String bankName, double value) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param v
-     * @return
-     */
     @Override
-    public EconomyResponse bankWithdraw(String s, double v) {
+    public EconomyResponse bankWithdraw(String bankName, double value) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param v
-     * @return
-     */
     @Override
-    public EconomyResponse bankDeposit(String s, double v) {
+    public EconomyResponse bankDeposit(String bankName, double value) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @deprecated
-     */
     @Override
-    public EconomyResponse isBankOwner(String s, String s1) {
+    public EconomyResponse isBankOwner(String bankName, String playerName) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param offlinePlayer
-     * @return
-     */
     @Override
-    public EconomyResponse isBankOwner(String s, OfflinePlayer offlinePlayer) {
+    public EconomyResponse isBankOwner(String bankName, OfflinePlayer offlinePlayer) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @deprecated
-     */
     @Override
-    public EconomyResponse isBankMember(String s, String s1) {
+    public EconomyResponse isBankMember(String bankName, String playerName) {
         return null;
     }
 
-    /**
-     * @param s
-     * @param offlinePlayer
-     * @return
-     */
     @Override
-    public EconomyResponse isBankMember(String s, OfflinePlayer offlinePlayer) {
+    public EconomyResponse isBankMember(String bankName, OfflinePlayer offlinePlayer) {
         return null;
     }
 
-    /**
-     * @return
-     */
+
     @Override
     public List<String> getBanks() {
         return null;
     }
 
-    /**
-     * @param s
-     * @deprecated
-     */
     @Override
-    public boolean createPlayerAccount(String s) {
+    @Deprecated
+    public boolean createPlayerAccount(String playerName) {
         return false;
     }
 
-    /**
-     * @param offlinePlayer
-     * @return
-     */
     @Override
     public boolean createPlayerAccount(OfflinePlayer offlinePlayer) {
         return false;
     }
 
-    /**
-     * @param s
-     * @param s1
-     * @deprecated
-     */
     @Override
-    public boolean createPlayerAccount(String s, String s1) {
+    public boolean createPlayerAccount(String playerName, String playerUUID) {
         return false;
     }
 
-    /**
-     * @param offlinePlayer
-     * @param s
-     * @return
-     */
     @Override
-    public boolean createPlayerAccount(OfflinePlayer offlinePlayer, String s) {
+    @Deprecated
+    public boolean createPlayerAccount(OfflinePlayer offlinePlayer, String playerName) {
         return false;
     }
+
 }

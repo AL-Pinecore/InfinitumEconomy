@@ -6,7 +6,9 @@ import cn.infinitumstudios.infinitumEconomy.classes.Permission;
 import cn.infinitumstudios.infinitumEconomy.listeners.PlayerEventListener;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,7 +39,7 @@ public class InfinitumEconomy extends JavaPlugin {
             return;
         }
 
-        PEL = new PlayerEventListener();
+        PEL = new PlayerEventListener(this);
         getServer().getPluginManager().registerEvents(PEL, this);
 
         setupPermissions();
@@ -77,12 +79,12 @@ public class InfinitumEconomy extends JavaPlugin {
         return econ;
     }
 
-    public static net.milkbowl.vault.permission.Permission getPermissions() {
-        return perms;
+    public static Permission getPermissions() {
+        return (Permission) perms;
     }
 
-    public static net.milkbowl.vault.chat.Chat getChat() {
-        return chat;
+    public static Chat getChat() {
+        return (Chat) chat;
     }
 
     @Override
@@ -90,7 +92,9 @@ public class InfinitumEconomy extends JavaPlugin {
         getLogger().info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
     }
 
-    protected void setPlayerAccount(String playerName, String playerUUID){
-
+    public void setPlayerAccount(OfflinePlayer joinPlayer){
+        if(!econ.hasAccount(joinPlayer)){
+            econ.createPlayerAccount(joinPlayer);
+        }
     }
 }
