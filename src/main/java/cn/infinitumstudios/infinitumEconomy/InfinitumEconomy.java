@@ -1,6 +1,6 @@
 package cn.infinitumstudios.infinitumEconomy;
 
-import cn.infinitumstudios.infinitumEconomy.classes.Economy;
+import cn.infinitumstudios.infinitumEconomy.foundation.Economy;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
 import org.bukkit.Bukkit;
@@ -16,6 +16,8 @@ public class InfinitumEconomy extends JavaPlugin {
     private static net.milkbowl.vault.permission.Permission perms = null;
     private static net.milkbowl.vault.chat.Chat chat = null;
     protected FileConfiguration config;
+
+    private static InfinitumEconomy instance;
 
     PlayerEventListener PEL;
 
@@ -66,5 +68,12 @@ public class InfinitumEconomy extends JavaPlugin {
         if(!econ.hasAccount(joinPlayer)){
             econ.createPlayerAccount(joinPlayer);
         }
+    }
+
+    public static InfinitumEconomy get() {
+        if(instance == null){
+            instance = getPlugin(InfinitumEconomy.class);
+        }
+        return instance;
     }
 }
