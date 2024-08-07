@@ -92,7 +92,13 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     @Deprecated
-    public boolean hasAccount(String playerName) { return false; }
+    public boolean hasAccount(String playerName) {
+        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+            if(Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName)){
+
+            }
+        }
+    }
 
     /**
      * Checks if this player has an account on the server yet
@@ -405,7 +411,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {{@link #isBankMember(String, OfflinePlayer)} instead.
+     * @deprecated As of VaultAPI 1.4 use {@link #isBankMember(String, OfflinePlayer)} instead.
      */
     @Override
     @Deprecated
