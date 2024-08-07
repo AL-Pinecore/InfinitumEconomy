@@ -1,7 +1,7 @@
 package cn.infinitumstudios.infinitumEconomy;
 
 import cn.infinitumstudios.infinitumEconomy.classes.Economy;
-import cn.infinitumstudios.infinitumEconomy.listeners.PlayerEventListener;
+import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
