@@ -2,7 +2,8 @@ name: InfinitumEconomy
 version: '1.0-SNAPSHOT'
 main: cn.infinitumstudios.infinitumEconomy.InfinitumEconomy
 api-version: '1.20'
-prefix: InfinitumEssential
+prefix: InfinitumEconomy
 load: STARTUP
 authors: [ ALPinecore ]
-description: An economy plugin written for infMC server
+depend: [ Vault ]
+description: An economy plugin for Bukkit Minecraft server
