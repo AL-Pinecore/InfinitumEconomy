@@ -1,5 +1,6 @@
 package cn.infinitumstudios.infinitumEconomy;
 
+import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
 import cn.infinitumstudios.infinitumEconomy.foundation.Economy;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
@@ -20,6 +21,13 @@ public class InfinitumEconomy extends JavaPlugin {
     private static InfinitumEconomy instance;
 
     PlayerEventListener PEL;
+
+    public InfinitumEconomy() {
+        instance = this;
+        PlayerJoinEvent.EVENT.register(player -> {
+            setPlayerAccount(player);
+        });
+    }
 
     @Override
     public void onEnable() {

@@ -13,7 +13,6 @@ public class PlayerEventListener implements Listener {
     }
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event){
-        OfflinePlayer player = event.getPlayer();
-        ie.setPlayerAccount(player);
+        cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent.EVENT.invoker().onCallback(event.getPlayer());
     }
 }

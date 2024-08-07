@@ -1,9 +1,13 @@
-package cn.infinitumstudios.infinitumEconomy.classes;
+package cn.infinitumstudios.infinitumEconomy.foundation;
 
+import cn.infinitumstudios.infinitumEconomy.InfinitumEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Economy implements net.milkbowl.vault.economy.Economy {
     /**
@@ -88,9 +92,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     @Deprecated
-    public boolean hasAccount(String playerName) {
-        return false;
-    }
+    public boolean hasAccount(String playerName) { return false; }
 
     /**
      * Checks if this player has an account on the server yet
