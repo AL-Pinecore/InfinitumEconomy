@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class EcoCommand extends InfinitumCommand implements CommandExecutor, TabCompleter {
-    public EcoCommand(InfinitumEconomy plugin) {
+public class EconCommand extends InfinitumCommand implements CommandExecutor, TabCompleter {
+    public EconCommand(InfinitumEconomy plugin) {
         super(plugin);
     }
 

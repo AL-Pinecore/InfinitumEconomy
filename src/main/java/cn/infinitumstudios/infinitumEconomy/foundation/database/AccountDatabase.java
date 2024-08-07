@@ -1,5 +1,6 @@
-package cn.infinitumstudios.infinitumEconomy.foundation.data;
+package cn.infinitumstudios.infinitumEconomy.foundation.database;
 
+import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -7,7 +8,15 @@ import org.bukkit.entity.Player;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class PlayerDatabase {
+public class AccountDatabase {
+
+    public static void load(){
+        PlayerJoinEvent.EVENT.register(player -> {
+            if(!player.hasPlayedBefore()){
+
+            }
+        });
+    }
 
     /**
      * @deprecated Deprecated method. Use {@link #getPlayer(UUID)} instead.
