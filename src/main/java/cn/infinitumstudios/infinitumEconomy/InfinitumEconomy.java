@@ -1,14 +1,11 @@
 package cn.infinitumstudios.infinitumEconomy;
 
-import cn.infinitumstudios.infinitumEconomy.classes.Chat;
 import cn.infinitumstudios.infinitumEconomy.classes.Economy;
-import cn.infinitumstudios.infinitumEconomy.classes.Permission;
 import cn.infinitumstudios.infinitumEconomy.listeners.PlayerEventListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,8 +27,6 @@ public class InfinitumEconomy extends JavaPlugin {
         getLogger().info(getDataFolder().toString());
 
         Bukkit.getServer().getServicesManager().register(Economy.class, new Economy(), this, ServicePriority.Highest);
-        Bukkit.getServer().getServicesManager().register(Chat.class, new Chat(perms), this, ServicePriority.Highest);
-        Bukkit.getServer().getServicesManager().register(Permission.class, new Permission(), this, ServicePriority.Highest);
 
         if (!setupEconomy()) {
             getLogger().severe("Disabled due to no Vault dependency found!");
@@ -41,9 +36,6 @@ public class InfinitumEconomy extends JavaPlugin {
 
         PEL = new PlayerEventListener(this);
         getServer().getPluginManager().registerEvents(PEL, this);
-
-        setupPermissions();
-        setupChat();
 
         getLogger().info("InfinitumEconomy plugin successfully enabled!");
 
@@ -61,30 +53,8 @@ public class InfinitumEconomy extends JavaPlugin {
         return econ != null;
     }
 
-    private boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        assert rsp != null;
-        chat = rsp.getProvider();
-        return chat != null;
-    }
-
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        assert rsp != null;
-        perms = rsp.getProvider();
-        return perms != null;
-    }
-
     public static Economy getEconomy() {
         return econ;
-    }
-
-    public static Permission getPermissions() {
-        return (Permission) perms;
-    }
-
-    public static Chat getChat() {
-        return (Chat) chat;
     }
 
     @Override
