@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Database<T extends IJsonConvertible<T>> {
-    private HashSet<T> items;
+    protected HashSet<T> items;
     private final String fileName;
     private final File file;
     private final Class<T> classOfT;
