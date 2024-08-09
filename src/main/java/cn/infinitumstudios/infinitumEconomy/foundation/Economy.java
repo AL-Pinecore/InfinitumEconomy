@@ -104,6 +104,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
 
             }
         }
+        return false;
     }
 
     /**
