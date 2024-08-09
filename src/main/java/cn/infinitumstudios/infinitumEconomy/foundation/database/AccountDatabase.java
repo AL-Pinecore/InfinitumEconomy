@@ -26,10 +26,6 @@ public class AccountDatabase extends Database<Account> {
         });
     }
 
-    public void load(){
-        super.load();
-    }
-
     /**
      * @param uuid The UUID of a player.
      * @return Returns a player if the player is found in online players and offline players.
