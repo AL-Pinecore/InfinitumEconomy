@@ -1,13 +1,14 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.types;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.util.Objects;
 import java.util.UUID;
 
 public class Account implements IJsonConvertible<Account> {
-    private UUID accountUUID, accountHolder;
+    private final UUID accountUUID;
+    private UUID accountHolder;
     private String nickname;
     private double balance;
 
@@ -16,6 +17,13 @@ public class Account implements IJsonConvertible<Account> {
         this.accountHolder = accountHolder;
         this.nickname = nickname;
         this.balance = 0.0;
+    }
+
+    private Account(UUID accountUUID, UUID accountHolder, String nickname, double balance) {
+        this.accountUUID = accountUUID;
+        this.accountHolder = accountHolder;
+        this.nickname = nickname;
+        this.balance = balance;
     }
 
     public Account(UUID accountHolder) {
@@ -40,10 +48,6 @@ public class Account implements IJsonConvertible<Account> {
 
     public UUID getAccountUUID() {
         return accountUUID;
-    }
-
-    public void setAccountUUID(UUID accountUUID) {
-        this.accountUUID = accountUUID;
     }
 
     public double getBalance() {
@@ -81,12 +85,12 @@ public class Account implements IJsonConvertible<Account> {
     }
 
     @Override
-    public JSONObject toJson() {
+    public JsonObject toJson() {
         return null;
     }
 
     @Override
-    public Account fromJson(JSONObject object) {
-        return null;
+    public Account fromJson(final JsonObject object) {
+        return new Account(UUID.fromString(object.get("uuid").getAsString()), UUID.fromString(object.get("player_uuid").getAsString()), "", 0.0);
     }
 }

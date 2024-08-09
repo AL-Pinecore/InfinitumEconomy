@@ -1,8 +1,9 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.interfaces;
 
-import org.json.simple.JSONObject;
+
+import com.google.gson.JsonObject;
 
 public interface IJsonConvertible<T> {
-    public JSONObject toJson();
-    public T fromJson(JSONObject object);
+    public JsonObject toJson();
+    public T fromJson(final JsonObject object);
 }
