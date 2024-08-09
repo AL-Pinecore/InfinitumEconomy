@@ -10,8 +10,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LoanCommand extends InfinitumSubcommand{
+public class LoanCommand extends InfinitumSubcommand implements CommandExecutor{
     public LoanCommand(InfinitumEconomy plugin) {
         super(plugin);
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        return false;
     }
 }
