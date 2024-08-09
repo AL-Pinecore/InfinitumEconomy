@@ -8,13 +8,11 @@ public class Bank {
     private String name;
     private UUID bankUUID, bankOwner;
     private List<Vault> vaults = new ArrayList<>();
-    private double balance;
 
-    public Bank(String name, UUID owner, double balance) {
+    public Bank(String name, UUID owner) {
         this.bankUUID = UUID.randomUUID();
         this.name = name;
         this.bankOwner = owner;
-        this.balance = balance;
     }
 
     public String getName() {
@@ -39,14 +37,6 @@ public class Bank {
 
     public void setVaults(List<Vault> vaults) {
         this.vaults = vaults;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
     }
 
     public UUID getBankUUID() {
