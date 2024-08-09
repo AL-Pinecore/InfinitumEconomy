@@ -1,26 +1,27 @@
 package cn.infinitumstudios.infinitumEconomy.foundation;
 
 public class Currency {
-    // Currency Name and Symbol cannot be changed after created.
-    private final String currencyName;
-    private float ratio;
-    private final String currencySymbol;
-    public Currency(String currencyName, String currencySymbol, float ratio){
-        this.currencyName = currencyName;
-        this.currencySymbol = currencySymbol;
+    private final String name, symbol;
+    private final double ratio;
+    public Currency(String name, String symbol, double ratio) {
+        this.name = name;
+        this.symbol = symbol;
         this.ratio = ratio;
     }
-    public Currency(String currencyName, String currencySymbol){
-        this.currencyName = currencyName;
-        this.currencySymbol = currencySymbol;
-        this.ratio = 1;
-    }
-    public float getRatio(){
-        return ratio;
+
+    public Currency(String name, String symbol) {
+        this(name, symbol, 1.0);
     }
 
-    public boolean setRatio(float newRatio){
-        this.ratio = newRatio;
-        return true;
+    public String getName() {
+        return name;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public double getRatio() {
+        return ratio;
     }
 }
