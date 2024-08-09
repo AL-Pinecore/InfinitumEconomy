@@ -19,4 +19,8 @@ public class InfinitumCommand {
         this.plugin = plugin;
         config = plugin.getConfig();
     }
+
+    public String getUsage(){
+        return "";
+    }
 }
