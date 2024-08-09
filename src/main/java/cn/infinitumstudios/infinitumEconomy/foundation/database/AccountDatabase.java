@@ -6,11 +6,12 @@ import cn.infinitumstudios.infinitumEconomy.utility.Reference;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.A;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,43 +33,27 @@ public class AccountDatabase extends Database<Account> {
      * @param uuid The UUID of a player.
      * @return Returns a player if the player is found in online players and offline players.
      */
-    public static @Nullable Player getPlayer(UUID uuid){
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if (player.getName() != null && player.getUniqueId().equals(uuid)) {
-                return player.getPlayer();
-            }
-        }
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getUniqueId().equals(uuid)) {
-                return player;
-            }
-        }
-
-        return null;
+    public static @Nullable OfflinePlayer getPlayer(UUID uuid){
+        return Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> offlinePlayer.getUniqueId().equals(uuid)).findFirst().orElseGet(null);
     }
 
     public void refreshPlayerEntries(){
         load();
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if(!player.hasPlayedBefore()){
-                create(new Account(player.getUniqueId(), player.getName()));
-            }
-        }
+        Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> !offlinePlayer.hasPlayedBefore()).forEach(offlinePlayer -> {
+            create(new Account(offlinePlayer.getUniqueId(), offlinePlayer.getName()));
+        });
         save();
     }
 
     public boolean addAccount(Account account){
         if(account == null) return false;
 
-        for(OfflinePlayer player : Bukkit.getOfflinePlayers()){
-            if (player.getUniqueId().equals(account.getAccountHolder())) {
-                create(account);
-                return true;
-            }
-        }
+        Optional<OfflinePlayer> temp = Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> offlinePlayer.getUniqueId().equals(account.getAccountHolder())).findFirst().stream().findFirst();
+        temp.ifPresent(offlinePlayer -> {
+            create(account);
+        });
 
-        return false;
+        return temp.isPresent();
     }
 
     public boolean removeAccount(UUID uuid){
