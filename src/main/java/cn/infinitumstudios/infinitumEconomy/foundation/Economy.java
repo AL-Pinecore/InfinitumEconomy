@@ -17,7 +17,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public boolean hasBankSupport() {
-        return false;
+        return true;
     }
 
     /**
