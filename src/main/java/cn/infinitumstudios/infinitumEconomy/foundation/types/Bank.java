@@ -7,7 +7,7 @@ import java.util.UUID;
 public class Bank {
     private String name;
     private UUID bankUUID, bankOwner;
-    private List<UUID> users = new ArrayList<>();
+    private List<Vault> vaults = new ArrayList<>();
     private double balance;
 
     public Bank(String name, UUID owner, double balance) {
@@ -33,12 +33,12 @@ public class Bank {
         this.bankOwner = owner;
     }
 
-    public List<UUID> getUsers() {
-        return users;
+    public List<Vault> getVaults() {
+        return vaults;
     }
 
-    public void setUsers(List<UUID> users) {
-        this.users = users;
+    public void setVaults(List<Vault> vaults) {
+        this.vaults = vaults;
     }
 
     public double getBalance() {
