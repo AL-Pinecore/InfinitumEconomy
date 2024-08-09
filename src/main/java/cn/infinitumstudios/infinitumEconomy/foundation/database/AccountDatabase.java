@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.checkerframework.checker.units.qual.A;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +21,7 @@ import java.util.UUID;
 public class AccountDatabase extends Database<Account> {
 
     public AccountDatabase() {
-        super(Reference.ACCOUNT_DATABASE_NAME, Account.class);
+        super(Reference.ACCOUNT_DATABASE_NAME, Account.class, new File(Path.of(Reference.DATA_FILES_DIRECTORY.toString(), Reference.ACCOUNT_DATABASE_NAME + ".json").toUri()));
 
         PlayerJoinEvent.EVENT.register(event -> {
             refreshPlayerEntries();

@@ -26,9 +26,13 @@ public class Database<T extends IJsonConvertible<T>> {
     private final Class<T> classOfT;
 
     public Database(String fileName, Class<T> classOfT) {
+        this(fileName, classOfT, new File(fileName + ".json"));
+    }
+
+    public Database(String fileName, Class<T> classOfT, File file) {
         items = new HashSet<>();
         this.fileName = fileName;
-        this.file = new File(Path.of(Reference.DATA_FILES_DIRECTORY.toString(), fileName + ".json").toUri());
+        this.file = file;
         this.classOfT = classOfT;
     }
 
