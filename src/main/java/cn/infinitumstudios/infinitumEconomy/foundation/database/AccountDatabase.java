@@ -1,43 +1,23 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.database;
 
 import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
+import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.A;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class AccountDatabase {
+public class AccountDatabase extends Database<Account> {
 
-    public static void load(){
-        PlayerJoinEvent.EVENT.register(player -> {
-            if(!player.hasPlayedBefore()){
-
-            }
-        });
+    public AccountDatabase() {
+        super("accounts", Account.class);
     }
 
-    /**
-     * @deprecated Deprecated method. Use {@link #getPlayer(UUID)} instead.
-     * @param username The username of the player.
-     * @return Returns a player if the player is found in online players and offline players.
-     */
-    @Deprecated(forRemoval = true, since = "0.0")
-    public static @Nullable Player getPlayer(String username){
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if (player.getName() != null && player.getName().equals(username)) {
-                return player.getPlayer();
-            }
-        }
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getName().equals(username)) {
-                return player;
-            }
-        }
-
-        return null;
+    public void load(){
+        super.load();
     }
 
     /**
@@ -58,5 +38,15 @@ public class AccountDatabase {
         }
 
         return null;
+    }
+
+    public void refreshPlayerEntries(){
+        load();
+        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+            if(!player.hasPlayedBefore()){
+                create(new Account(player.getUniqueId(), player.getName()));
+            }
+        }
+        save();
     }
 }

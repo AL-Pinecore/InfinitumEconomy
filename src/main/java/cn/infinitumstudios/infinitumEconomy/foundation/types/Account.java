@@ -1,8 +1,12 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.types;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
+import org.json.simple.JSONObject;
+
+import java.util.Objects;
 import java.util.UUID;
 
-public class Account {
+public class Account implements IJsonConvertible<Account> {
     private UUID accountUUID, accountHolder;
     private String nickname;
     private double balance;
@@ -62,5 +66,27 @@ public class Account {
         this.balance = Math.max(this.balance, 0.0d);
 
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account account)) return false;
+        return Objects.equals(getAccountUUID(), account.getAccountUUID()) && Objects.equals(getAccountHolder(), account.getAccountHolder());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAccountUUID(), getAccountHolder());
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return null;
+    }
+
+    @Override
+    public Account fromJson(JSONObject object) {
+        return null;
     }
 }
