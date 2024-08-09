@@ -86,11 +86,16 @@ public class Account implements IJsonConvertible<Account> {
 
     @Override
     public JsonObject toJson() {
-        return null;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("accountUUID", accountUUID.toString());
+        jsonObject.addProperty("accountHolder", accountHolder.toString());
+        jsonObject.addProperty("nickname", nickname);
+        jsonObject.addProperty("balance", balance);
+        return jsonObject;
     }
 
     @Override
     public Account fromJson(final JsonObject object) {
-        return new Account(UUID.fromString(object.get("uuid").getAsString()), UUID.fromString(object.get("player_uuid").getAsString()), "", 0.0);
+        return new Account(UUID.fromString(object.get("accountUUID").getAsString()), UUID.fromString(object.get("accountHolder").getAsString()), object.get("nickname").getAsString(), object.get("balance").getAsDouble());
     }
 }

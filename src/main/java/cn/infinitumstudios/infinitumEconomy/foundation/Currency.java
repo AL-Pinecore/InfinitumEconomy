@@ -1,7 +1,7 @@
 package cn.infinitumstudios.infinitumEconomy.foundation;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
 public class Currency implements IJsonConvertible<Currency> {
     public static Currency DEFAULT = new Currency("Fractal", "Fractals", "Σ");
@@ -43,12 +43,12 @@ public class Currency implements IJsonConvertible<Currency> {
     }
 
     @Override
-    public JSONObject toJson() {
+    public JsonObject toJson() {
         return null;
     }
 
     @Override
-    public Currency fromJson(JSONObject object) {
+    public Currency fromJson(JsonObject object) {
         return null;
     }
 }
