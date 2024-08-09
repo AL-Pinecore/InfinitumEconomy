@@ -1,41 +1,51 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.account;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.Currency;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class Bank {
-    private String bankName, bankOwnerName;
+    private String bankName;
+    private Currency usingCurrency;
+    private String bankOwnerName;
     private UUID bankOwnerUUID;
-    private Player bankOwner;
-    private List<Player> bankMemberList = new ArrayList<>();
+    private List<OfflinePlayer> bankMemberList = new ArrayList<>();
     private double bankBalance;
-    public Bank(String bankName,Player bankOwner){
+    public Bank(String bankName,OfflinePlayer bankOwner){
         this.bankName = bankName;
-        this.bankOwner = bankOwner;
         this.bankOwnerName = bankOwner.getName();
         this.bankOwnerUUID = bankOwner.getUniqueId();
         this.bankBalance = 0.0;
+        this.usingCurrency = new Currency("default", "default", 1);
     }
 
-    public Bank(String bankName, Player bankOwner, UUID bankOwnerUUID, String bankOwnerName, List<Player> bankMemberList, int bankBalance){
+    public Bank(String bankName, String bankOwnerName, UUID bankOwnerUUID, List<OfflinePlayer> bankMemberList, Currency usingCurrency, int bankBalance){
         this.bankName = bankName;
-        this.bankOwner = bankOwner;
         this.bankOwnerName = bankOwnerName;
         this.bankOwnerUUID = bankOwnerUUID;
         this.bankMemberList = bankMemberList;
         this.bankBalance = bankBalance;
+        this.usingCurrency = usingCurrency;
     }
 
-    public Bank(String bankName,Player bankOwner,double initialBalance){
+    public Bank(String bankName, OfflinePlayer bankOwner, double initialBalance){
         this.bankName = bankName;
-        this.bankOwner = bankOwner;
         this.bankOwnerName = bankOwner.getName();
         this.bankOwnerUUID = bankOwner.getUniqueId();
         this.bankBalance = initialBalance;
+        usingCurrency = new Currency("default", "default", 1);
+    }
+
+    public Bank(String bankName, OfflinePlayer bankOwner, Currency usingCurrency, double initialBalance){
+        this.bankName = bankName;
+        this.bankOwnerName = bankOwner.getName();
+        this.bankOwnerUUID = bankOwner.getUniqueId();
+        this.bankBalance = initialBalance;
+        this.usingCurrency = usingCurrency;
     }
 
     public String getBankName(){
@@ -44,8 +54,8 @@ public class Bank {
     public void setBankName(String bankName){
         this.bankName = bankName;
     }
-    public Player getBankOwner(){
-        return bankOwner;
+    public OfflinePlayer getBankOwner(){
+        return Bukkit.getOfflinePlayer(bankOwnerUUID);
     }
     public String getBankOwnerName(){
         return bankOwnerName;
@@ -53,23 +63,22 @@ public class Bank {
     public UUID getBankOwnerUUID(){
         return bankOwnerUUID;
     }
-    public boolean setBankOwner(Player bankOwner){
-        if (this.bankOwner == bankOwner){
+    public boolean setBankOwner(OfflinePlayer bankOwner){
+        if (bankOwner == Bukkit.getOfflinePlayer(bankOwnerUUID)){
             return false;
         } else {
-            this.bankOwner = bankOwner;
             this.bankOwnerUUID = bankOwner.getUniqueId();
             this.bankOwnerName = bankOwner.getName();
             return true;
         }
     }
-    public List<Player> getBankMembers(){
+    public List<OfflinePlayer> getBankMembers(){
         return bankMemberList;
     }
-    public boolean isBankMember(Player player) {
+    public boolean isBankMember(OfflinePlayer player) {
         return bankMemberList.contains(player);
     }
-    public boolean addBankMember(Player player){
+    public boolean addBankMember(OfflinePlayer player){
         if (bankMemberList.contains(player)){
             return false;
         } else {
@@ -77,7 +86,7 @@ public class Bank {
             return true;
         }
     }
-    public boolean removeBankMember(Player player){
+    public boolean removeBankMember(OfflinePlayer player){
         if (!this.bankMemberList.contains(player)){
             return false;
         } else {
@@ -95,11 +104,19 @@ public class Bank {
         this.bankBalance = amount;
         return true;
     }
-    public void incrementBankBalance(double amount){
+    public boolean incrementBankBalance(double amount){
         this.bankBalance += amount;
+        return true;
     }
     public boolean decrementBankBalance(double amount){
         this.bankBalance -= amount;
         return true;
+    }
+    public boolean setUsingCurrency(Currency usingCurrency){
+        this.usingCurrency = usingCurrency;
+        return true;
+    }
+    public Currency getUsingCurrency(){
+        return this.usingCurrency;
     }
 }
