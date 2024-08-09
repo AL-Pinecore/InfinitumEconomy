@@ -47,6 +47,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      *
      * @return number of digits after the decimal point kept
      */
+    // 返回约分后的值，-1为没进行任何约分
     @Override
     public int fractionalDigits() {
         return 0;
@@ -59,6 +60,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @param amount to format
      * @return Human readable string describing amount
      */
+    // 整形
     @Override
     public String format(double amount) {
         return null;
@@ -70,6 +72,8 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      *
      * @return name of the currency (plural)
      */
+    // 返回货币的名称
+    // 请返回默认名称(plural)
     @Override
     public String currencyNamePlural() {
         return null;
@@ -82,6 +86,8 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      *
      * @return name of the currency (singular)
      */
+    // 返回货币的名称
+    // 请返回默认名称(singular)
     @Override
     public String currencyNameSingular() {
         return null;
@@ -108,6 +114,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @param player to check
      * @return if the player has an account
      */
+    // 玩家是否拥有经济帐户
     @Override
     public boolean hasAccount(OfflinePlayer player) {
         return false;
@@ -131,6 +138,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @param worldName world-specific account
      * @return if the player has an account
      */
+    // 玩家是否拥有经济帐户
     @Override
     public boolean hasAccount(OfflinePlayer player, String worldName) {
         return false;
@@ -151,6 +159,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @param player of the player
      * @return Amount currently held in players account
      */
+    // 获取玩家所拥有的钱的总量，换算为default货币
     @Override
     public double getBalance(OfflinePlayer player) {
         return 0;
@@ -173,6 +182,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @param world  name of the world
      * @return Amount currently held in players account
      */
+    // 获取玩家所拥有的钱的总量，换算为default货币
     @Override
     public double getBalance(OfflinePlayer player, String world) {
         return 0;
@@ -194,6 +204,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @param amount to check for
      * @return True if <b>player</b> has <b>amount</b>, False else wise
      */
+    // 查看玩家是否拥有amount的钱（够不够），请返回GlobalBalance并且换算为default货币
     @Override
     public boolean has(OfflinePlayer player, double amount) {
         return false;
@@ -218,6 +229,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @return True if <b>player</b> has <b>amount</b>, False else wise
      */
     @Override
+    // 查看玩家是否拥有amount的钱（够不够），请返回GlobalBalance并且换算为default货币
     public boolean has(OfflinePlayer player, String worldName, double amount) {
         return false;
     }
@@ -426,6 +438,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      * @param player to check membership
      * @return EconomyResponse Object
      */
+    // 查看玩家是否为一个银行的成员
     @Override
     public EconomyResponse isBankMember(String name, OfflinePlayer player) {
         return null;
@@ -436,6 +449,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      *
      * @return the List of Banks
      */
+    // 返回银行列表，返回类型为字符串数列
     @Override
     public List<String> getBanks() {
         return null;

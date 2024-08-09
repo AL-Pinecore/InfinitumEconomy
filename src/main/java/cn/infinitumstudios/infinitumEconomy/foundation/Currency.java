@@ -7,13 +7,13 @@ public class Currency implements IJsonConvertible<Currency> {
     public static Currency DEFAULT = new Currency("Fractal", "Fractals", "Σ");
 
     private final String name, pluralName, symbol;
-    private final double ratio;
+    private final double currencyWorth;
 
-    public Currency(String name, String pluralName, String symbol, double ratio) {
+    public Currency(String name, String pluralName, String symbol, double currencyWorth) {
         this.name = name;
         this.pluralName = pluralName;
         this.symbol = symbol;
-        this.ratio = ratio;
+        this.currencyWorth = currencyWorth;
     }
 
     public Currency(String name, String pluralName, String symbol) {
@@ -28,8 +28,8 @@ public class Currency implements IJsonConvertible<Currency> {
         return symbol;
     }
 
-    public double getRatio() {
-        return ratio;
+    public double getCurrencyWorth() {
+        return currencyWorth;
     }
 
     public String getPluralName() {
