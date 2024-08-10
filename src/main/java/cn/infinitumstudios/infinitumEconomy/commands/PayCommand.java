@@ -5,6 +5,7 @@ import cn.infinitumstudios.infinitumEconomy.foundation.Currency;
 import cn.infinitumstudios.infinitumEconomy.foundation.database.AccountDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 import cn.infinitumstudios.infinitumEconomy.utility.MessageColor;
+import cn.infinitumstudios.infinitumEconomy.utility.ThreadExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,7 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class PayCommand extends InfinitumSubcommand{
     protected AccountDatabase db = new AccountDatabase();
@@ -54,21 +57,60 @@ public class PayCommand extends InfinitumSubcommand{
 
         db.load();
 
-        List<Account> targetAccountList = db.readWhere(account -> Bukkit.getOnlinePlayers().stream().anyMatch(o -> o.getUniqueId().equals(account.getAccountHolder())));
-        Optional<Account> from = db.getAccountWithHolder(((Player) sender).getUniqueId());
+        List<UUID> targetUUIDs = Arrays.stream(args)
+                .skip(1) // Skip the amount argument
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .map(Player::getUniqueId)
+                .toList();
 
-        if (!targetAccountList.isEmpty() && from.isPresent()){
-            payment *= targetAccountList.size();
-            boolean success = from.get().decrementBalance(payment);
-            if(!success){
-                sender.sendMessage("You don't have enough money.");
+        Optional<Account> fromAccount = db.getAccountWithHolder(((Player) sender).getUniqueId());
+
+        if (fromAccount.isPresent() && !targetUUIDs.isEmpty()) {
+            double paymentPerPlayer = payment / targetUUIDs.size();
+
+            // Update sender's account
+            double finalPayment = payment;
+            boolean senderUpdateSuccess = db.update(
+                    account -> account.getAccountHolder().equals(fromAccount.get().getAccountHolder()),
+                    account -> {
+                        boolean success = account.decrementBalance(finalPayment);
+                        if (!success) {
+                            sender.sendMessage("You don't have enough money.");
+                        }
+                        return success ? account : null;
+                    }
+            );
+
+            if (!senderUpdateSuccess) {
                 return false;
             }
 
-            double finalPayment = payment;
-            targetAccountList.forEach(a -> a.incrementBalance(finalPayment / targetAccountList.size()));
+            // Update recipients' accounts
+            AtomicInteger successfulTransfers = new AtomicInteger(0);
+            targetUUIDs.forEach(uuid -> {
+                boolean recipientUpdateSuccess = db.update(
+                        account -> account.getAccountHolder().equals(uuid),
+                        account -> {
+                            account.incrementBalance(paymentPerPlayer);
+                            return account;
+                        }
+                );
+                if (recipientUpdateSuccess)
+                    successfulTransfers.incrementAndGet();
+            });
 
-            sender.sendMessage(MessageColor.text(String.format("You transferred a total of %s to %s account(s).", Currency.DEFAULT.value(payment, false), targetAccountList.size()), ChatColor.GREEN));
+            sender.sendMessage(MessageColor.text(
+                    String.format("You transferred a total of %s to %d account(s).",
+                            Currency.DEFAULT.value(paymentPerPlayer * successfulTransfers.get(), false),
+                            successfulTransfers.get()),
+                    ChatColor.GREEN
+            ));
+
+            ThreadExecutor.run(() -> {
+                db.save();
+                AccountDatabase.loadAll();
+            });
             return true;
         } else {
             sender.sendMessage(MessageColor.text("Invalid Target/Sender Account.", ChatColor.RED));

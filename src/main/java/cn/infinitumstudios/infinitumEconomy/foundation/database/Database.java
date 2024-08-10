@@ -1,6 +1,7 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.database;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
+import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 import cn.infinitumstudios.infinitumEconomy.utility.Reference;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,9 +18,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public class Database<T extends IJsonConvertible<T>> {
+    private static List<Database> cachedInstances = new ArrayList<>();
     protected HashSet<T> items;
     private final String fileName;
     private final File file;
@@ -27,6 +30,7 @@ public class Database<T extends IJsonConvertible<T>> {
 
     public Database(String fileName, Class<T> classOfT) {
         this(fileName, classOfT, new File(fileName + ".json"));
+        cachedInstances.add(this);
     }
 
     public Database(String fileName, Class<T> classOfT, File file) {
@@ -34,6 +38,10 @@ public class Database<T extends IJsonConvertible<T>> {
         this.fileName = fileName;
         this.file = file;
         this.classOfT = classOfT;
+    }
+
+    public static void loadAll(){
+        cachedInstances.forEach(Database::load);
     }
 
     // Create
@@ -61,6 +69,25 @@ public class Database<T extends IJsonConvertible<T>> {
             items.remove(item.get());
             items.add(newItem);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Updates an item in the database that matches the given condition.
+     * @param condition A predicate to find the item to update.
+     * @param updater A function that takes the found item and returns an updated version (or null to cancel the update).
+     * @return true if an item was found and updated, false otherwise.
+     */
+    protected boolean update(Predicate<T> condition, UnaryOperator<T> updater) {
+        Optional<T> item = read(condition);
+        if (item.isPresent()) {
+            T updatedItem = updater.apply(item.get());
+            if (updatedItem != null) {
+                items.remove(item.get());
+                items.add(updatedItem);
+                return true;
+            }
         }
         return false;
     }

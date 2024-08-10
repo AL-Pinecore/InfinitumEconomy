@@ -12,9 +12,11 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * @implNote The account database is a wrapper of the {@link Database} class for {@link Account} related operations. See {@link Database} implementation for more info.
@@ -79,7 +81,7 @@ public class AccountDatabase extends Database<Account> {
         return read(account -> account.getAccountUUID().equals(uuid));
     }
 
-//    public void updateAccounts(Predicate<Account> predicate){
-//        update(predicate, new Account);
-//    }
+    public boolean update(Predicate<Account> accountPredicate, UnaryOperator<Account> account) {
+        return super.update(accountPredicate, account);
+    }
 }
