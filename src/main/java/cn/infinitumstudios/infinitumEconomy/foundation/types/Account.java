@@ -13,10 +13,7 @@ public class Account implements IJsonConvertible<Account> {
     private double balance;
 
     public Account(UUID accountHolder, String nickname) {
-        this.accountUUID = UUID.randomUUID();
-        this.accountHolder = accountHolder;
-        this.nickname = nickname;
-        this.balance = 0.0;
+        this(UUID.randomUUID(), accountHolder, nickname, 0.0);
     }
 
     private Account(UUID accountUUID, UUID accountHolder, String nickname, double balance) {

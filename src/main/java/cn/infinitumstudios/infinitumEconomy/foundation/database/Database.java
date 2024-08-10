@@ -44,24 +44,53 @@ public class Database<T extends IJsonConvertible<T>> {
         cachedInstances.forEach(Database::load);
     }
 
+    /**
+     * Adds a new item to the database.
+     *
+     * @param item The item to be added to the database.
+     */
     // Create
     protected void create(T item) {
         items.add(item);
     }
 
+    /**
+     * Returns an Optional object containing the first element in the items collection that satisfies the given condition, or an empty Optional if no matching element is found.
+     *
+     * @param condition the Predicate function used to filter the items collection
+     * @return an Optional object containing the first matching element, or an empty Optional if no matching element is found
+     */
     // Read
     public Optional<T> read(Predicate<T> condition) {
         return items.stream().filter(condition).findFirst();
     }
 
+    /**
+     * Returns a list of all items in the database.
+     *
+     * @return a list of all items in the database
+     */
     public List<T> readAll() {
         return new ArrayList<>(items);
     }
 
+    /**
+     * Returns a list of elements from the database that satisfy the given condition.
+     *
+     * @param condition the Predicate function used to filter the items collection
+     * @return a list of elements from the database that satisfy the condition
+     */
     public List<T> readWhere(Predicate<T> condition) {
         return items.stream().filter(condition).collect(Collectors.toList());
     }
 
+    /**
+     * Updates an item in the database that matches the given condition.
+     *
+     * @param condition A predicate to find the item to update.
+     * @param newItem The new item to replace the existing item.
+     * @return true if an item was found and updated, false otherwise.
+     */
     // Update
     protected boolean update(Predicate<T> condition, T newItem) {
         Optional<T> item = read(condition);
@@ -92,6 +121,12 @@ public class Database<T extends IJsonConvertible<T>> {
         return false;
     }
 
+    /**
+     * Deletes an item from the database that matches the given condition.
+     *
+     * @param condition A predicate used to filter the items collection to find the item to delete.
+     * @return true if an item was found and deleted, false otherwise.
+     */
     // Delete
     protected boolean delete(Predicate<T> condition) {
         Optional<T> item = read(condition);
@@ -124,10 +159,18 @@ public class Database<T extends IJsonConvertible<T>> {
         items.addAll(newItems);
     }
 
+    /**
+     * Deletes multiple items from the database that satisfy the given condition.
+     *
+     * @param condition A predicate used to filter the items collection to find the items to delete.
+     */
     public void deleteBatch(Predicate<T> condition) {
         items.removeIf(condition);
     }
 
+    /**
+     * Saves the collection of items to a file.
+     */
     // Save to file
     public void save() {
         JsonObject obj = new JsonObject();
@@ -145,10 +188,16 @@ public class Database<T extends IJsonConvertible<T>> {
         }
     }
 
+    /**
+     * Loads data from a file into the database.
+     * If the file does not exist, nothing is loaded.
+     *
+     * @throws Exception if an error occurs while loading data from the file
+     */
     // Load from file
     public void load() {
         if (!file.exists()) {
-            return; // File doesn't exist yet, nothing to load
+            createDefaultFile();
         }
 
         try (FileReader reader = new FileReader(file)) {
@@ -173,6 +222,18 @@ public class Database<T extends IJsonConvertible<T>> {
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private void createDefaultFile() {
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            JsonObject obj = new JsonObject();
+            JsonArray jsonArray = new JsonArray();
+            obj.add("items", jsonArray);
+            fileWriter.write(obj.toString());
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

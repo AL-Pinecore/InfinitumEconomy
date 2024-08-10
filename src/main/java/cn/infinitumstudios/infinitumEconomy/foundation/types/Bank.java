@@ -10,9 +10,13 @@ public class Bank {
     private List<Vault> vaults = new ArrayList<>();
 
     public Bank(String name, UUID owner) {
-        this.bankUUID = UUID.randomUUID();
+        this(name, UUID.randomUUID(), owner);
+    }
+
+    private Bank(String name, UUID bankUUID, UUID bankOwner) {
+        this.bankUUID = bankUUID;
+        this.bankOwner = bankOwner;
         this.name = name;
-        this.bankOwner = owner;
     }
 
     public String getName() {
