@@ -80,6 +80,8 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
                     commandSender.sendMessage(getUsage());
                     return null;
             }
+        } else {
+            return null;
         }
     }
 

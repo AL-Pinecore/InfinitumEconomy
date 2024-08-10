@@ -7,3 +7,6 @@ load: STARTUP
 authors: [ ALPinecore ]
 depend: [ Vault ]
 description: An economy plugin for Bukkit Minecraft server
+commands:
+  econ:
+    description: Econ operation
