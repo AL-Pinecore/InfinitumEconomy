@@ -32,7 +32,7 @@ public class PayCommand extends InfinitumSubcommand{
         // Usage: /econ pay <amount> <...players>
 
         if(args.length < 2) {
-            sender.sendMessage(command.getUsage());
+            sender.sendMessage(getUsage());
             return false;
         }
 
@@ -51,7 +51,7 @@ public class PayCommand extends InfinitumSubcommand{
             payment = Double.parseDouble(args[0]);
         } catch (Exception e) {
             e.printStackTrace();
-            sender.sendMessage(command.getUsage());
+            sender.sendMessage(getUsage());
             return false;
         }
 
@@ -62,6 +62,7 @@ public class PayCommand extends InfinitumSubcommand{
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .map(Player::getUniqueId)
+                .distinct()
                 .toList();
 
         Optional<Account> fromAccount = db.getAccountWithHolder(((Player) sender).getUniqueId());
@@ -128,5 +129,10 @@ public class PayCommand extends InfinitumSubcommand{
         } else {
             return null;
         }
+    }
+
+    @Override
+    public String getUsage() {
+        return "/econ pay <amount> <...players>";
     }
 }

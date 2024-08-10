@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,11 +62,29 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return List.of();
+        String[] truncatedArgs = Arrays.copyOfRange(args, 1, args.length);
+
+        if(args.length == 1){
+            return Arrays.asList("pay", "loan", "cheque", "baltop");
+        } else if(args.length == 2) {
+            switch (args[0].toLowerCase()) {
+                case "pay":
+                    return payCommand.tabComplete(commandSender, truncatedArgs);
+                case "loan":
+                    return loanCommand.tabComplete(commandSender, truncatedArgs);
+                case "cheque":
+                    return chequeCommand.tabComplete(commandSender, truncatedArgs);
+                case "baltop":
+                    return baltopCommand.tabComplete(commandSender, truncatedArgs);
+                default:
+                    commandSender.sendMessage(getUsage());
+                    return null;
+            }
+        }
     }
 
     @Override
     public String getUsage() {
-        return "/econ <>";
+        return "/econ <options>";
     }
 }

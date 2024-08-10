@@ -28,4 +28,8 @@ public class InfinitumSubcommand {
     public @Nullable List<String> tabComplete(@NotNull CommandSender sender, @NotNull String[] args) {
         return null;
     }
+
+    public String getUsage() {
+        return "/econ <options>";
+    }
 }
