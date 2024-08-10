@@ -2,10 +2,10 @@ package cn.infinitumstudios.infinitumEconomy.foundation.database;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
 import cn.infinitumstudios.infinitumEconomy.utility.Reference;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.File;
 import java.io.FileReader;
@@ -103,13 +103,15 @@ public class Database<T extends IJsonConvertible<T>> {
 
     // Save to file
     public void save() {
-        JSONArray jsonArray = new JSONArray();
+        JsonObject obj = new JsonObject();
+        JsonArray jsonArray = new JsonArray();
         for (T item : items) {
             jsonArray.add(item.toJson());
         }
+        obj.add("items", jsonArray);
 
         try (FileWriter fileWriter = new FileWriter(file)) {
-            fileWriter.write(jsonArray.toJSONString());
+            fileWriter.write(obj.toString());
             fileWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -122,25 +124,22 @@ public class Database<T extends IJsonConvertible<T>> {
             return; // File doesn't exist yet, nothing to load
         }
 
-        JSONParser jsonParser = new JSONParser();
-
         try (FileReader reader = new FileReader(file)) {
-            Object obj = jsonParser.parse(reader);
-            JSONArray jsonArray = (JSONArray) obj;
+            JsonElement parent = JsonParser.parseReader(reader);
 
             items.clear();
-            for (Object jsonObj : jsonArray) {
-                T item = createItemFromJson((JSONObject) jsonObj);
+            for (var jsonObj : parent.getAsJsonObject().getAsJsonArray("items")) {
+                T item = createItemFromJson(jsonObj.getAsJsonObject());
                 if (item != null) {
                     items.add(item);
                 }
             }
-        } catch (IOException | ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private T createItemFromJson(JSONObject jsonObject) {
+    private T createItemFromJson(JsonObject jsonObject) {
         try {
             T item = classOfT.getDeclaredConstructor().newInstance();
             return item.fromJson(jsonObject);

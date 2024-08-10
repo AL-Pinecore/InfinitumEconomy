@@ -12,13 +12,22 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class EconCommand extends InfinitumCommand implements CommandExecutor, TabCompleter {
     public static String KEYWORD = "econ";
+    protected PayCommand payCommand;
+    protected LoanCommand loanCommand;
+    protected ChequeCommand chequeCommand;
+    protected BaltopCommand baltopCommand;
 
     public EconCommand(InfinitumEconomy plugin) {
         super(plugin);
+        payCommand = new PayCommand(this);
+        loanCommand = new LoanCommand(this);
+        chequeCommand = new ChequeCommand(this);
+        baltopCommand = new BaltopCommand(this);
     }
 
     @Override
@@ -33,7 +42,21 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
             return false;
         }
 
-        return false;
+        String[] truncatedArgs = Arrays.copyOfRange(args, 1, args.length);
+
+        switch (args[0].toLowerCase()) {
+            case "pay":
+                return payCommand.execute(commandSender, truncatedArgs);
+            case "loan":
+                return loanCommand.execute(commandSender, truncatedArgs);
+            case "cheque":
+                return chequeCommand.execute(commandSender, truncatedArgs);
+            case "baltop":
+                return baltopCommand.execute(commandSender, truncatedArgs);
+            default:
+                commandSender.sendMessage(getUsage());
+                return false;
+        }
     }
 
     @Override

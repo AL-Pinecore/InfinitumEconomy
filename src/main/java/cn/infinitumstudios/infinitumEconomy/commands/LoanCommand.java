@@ -10,13 +10,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LoanCommand extends InfinitumSubcommand implements CommandExecutor{
-    public LoanCommand(InfinitumEconomy plugin) {
-        super(plugin);
+public class LoanCommand extends InfinitumSubcommand {
+
+    public LoanCommand(InfinitumCommand command) {
+        super(command);
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public void reloadCommand(InfinitumCommand command) {
+        super.reloadCommand(command);
+    }
+
+    @Override
+    public boolean execute(CommandSender sender, String[] args) {
         return false;
+    }
+
+    @Override
+    public @Nullable List<String> tabComplete(CommandSender sender, String[] args) {
+        return null;
     }
 }
