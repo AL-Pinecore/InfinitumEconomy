@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * @implNote The account database is a wrapper of the {@link Database} class for {@link Account} related operations. See {@link Database} implementation for more info.
@@ -77,4 +78,8 @@ public class AccountDatabase extends Database<Account> {
     public Optional<Account> getAccount(UUID uuid){
         return read(account -> account.getAccountUUID().equals(uuid));
     }
+
+//    public void updateAccounts(Predicate<Account> predicate){
+//        update(predicate, new Account);
+//    }
 }

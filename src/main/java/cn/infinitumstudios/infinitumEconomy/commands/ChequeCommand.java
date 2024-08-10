@@ -9,9 +9,26 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class ChequeCommand extends InfinitumSubcommand{
+    public ChequeCommand(InfinitumCommand command) {
+        super(command);
+    }
     // Create a Cheque using a paper
-    public ChequeCommand(InfinitumEconomy plugin) {
-        super(plugin);
+
+    @Override
+    public void reloadCommand(InfinitumCommand command) {
+
+    }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
+        return super.execute(sender, args);
+    }
+
+    @Override
+    public @Nullable List<String> tabComplete(@NotNull CommandSender sender, @NotNull String[] args) {
+        return super.tabComplete(sender, args);
     }
 }
