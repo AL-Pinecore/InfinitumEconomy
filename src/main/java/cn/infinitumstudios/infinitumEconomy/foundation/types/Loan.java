@@ -6,14 +6,14 @@ import org.bukkit.OfflinePlayer;
 import java.util.UUID;
 
 public class Loan {
-    private final UUID loanUUID, borrowerUUID, loanerUUID, loanBankUUID;
+    private final UUID loanUUID, lenderUUID, borrowerUUID, loanBankUUID;
     private final Currency usedCurrency;
     private double value, interestRate;
 
     // Loan from player account
     public Loan(OfflinePlayer borrower, OfflinePlayer loaner, double value, double interestRate, Currency currency){
-        this.borrowerUUID = borrower.getUniqueId();
-        this.loanerUUID = loaner.getUniqueId();
+        this.lenderUUID = borrower.getUniqueId();
+        this.borrowerUUID = loaner.getUniqueId();
         this.usedCurrency = currency;
         this.value = value;
         this.interestRate = interestRate;
@@ -23,8 +23,8 @@ public class Loan {
 
     // Loan from bank account
     public Loan(OfflinePlayer borrower, Bank loanBank, double value, double interestRate, Currency currency){
-        this.borrowerUUID = borrower.getUniqueId();
-        this.loanerUUID = null;
+        this.lenderUUID = borrower.getUniqueId();
+        this.borrowerUUID = null;
         this.usedCurrency = currency;
         this.value = value;
         this.interestRate = interestRate;
@@ -36,12 +36,12 @@ public class Loan {
         return loanUUID;
     }
 
-    public UUID getBorrowerUUID(){
-        return borrowerUUID;
+    public UUID getLenderUUID(){
+        return lenderUUID;
     }
 
-    public UUID getLoanerUUID(){
-        return loanerUUID;
+    public UUID getBorrowerUUID(){
+        return borrowerUUID;
     }
 
     public UUID getLoanBankUUID(){
