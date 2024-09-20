@@ -3,6 +3,7 @@ package cn.infinitumstudios.infinitumEconomy.commands;
 import cn.infinitumstudios.infinitumEconomy.InfinitumEconomy;
 import cn.infinitumstudios.infinitumEconomy.foundation.Currency;
 import cn.infinitumstudios.infinitumEconomy.foundation.database.AccountDatabase;
+import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 import cn.infinitumstudios.infinitumEconomy.utility.MessageColor;
 import cn.infinitumstudios.infinitumEconomy.utility.ThreadExecutor;
@@ -103,7 +104,7 @@ public class PayCommand extends InfinitumSubcommand{
 
             sender.sendMessage(MessageColor.text(
                     String.format("You transferred a total of %s to %d account(s).",
-                            Currency.DEFAULT.value(paymentPerPlayer * successfulTransfers.get(), false),
+                            CurrencyDatabase.DEFAULT_CURRENCY.value(paymentPerPlayer * successfulTransfers.get(), false),
                             successfulTransfers.get()),
                     ChatColor.GREEN
             ));
