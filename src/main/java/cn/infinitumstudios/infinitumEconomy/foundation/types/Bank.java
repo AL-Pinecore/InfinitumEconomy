@@ -1,10 +1,13 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.types;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Bank {
+public class Bank implements IJsonConvertible<Bank> {
     private String name;
     private UUID bankUUID, bankOwner;
     private List<Vault> vaults = new ArrayList<>();
@@ -49,5 +52,21 @@ public class Bank {
 
     public void setBankUUID(UUID uuid) {
         this.bankUUID = uuid;
+    }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject json = new JsonObject();
+        json.addProperty("name", name);
+        json.addProperty("bankUUID", bankUUID.toString());
+        json.addProperty("bankOwner", bankOwner.toString());
+        return json;
+    }
+
+    @Override
+    public void fromJson(JsonObject object) {
+        this.name = object.get("name").getAsString();
+        this.bankUUID = UUID.fromString(object.get("bankUUID").getAsString());
+        this.bankOwner = UUID.fromString(object.get("bankOwner").getAsString());
     }
 }
