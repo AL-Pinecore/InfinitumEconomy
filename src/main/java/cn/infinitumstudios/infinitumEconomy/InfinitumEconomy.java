@@ -1,5 +1,6 @@
 package cn.infinitumstudios.infinitumEconomy;
 
+import cn.infinitumstudios.infinitumEconomy.commands.EconCommand;
 import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
 import cn.infinitumstudios.infinitumEconomy.foundation.Economy;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
@@ -67,6 +68,14 @@ public class InfinitumEconomy extends JavaPlugin {
         PEL = new PlayerEventListener(this);
         getServer().getPluginManager().registerEvents(PEL, this);
 
+        this.getCommand("econ").setExecutor(new EconCommand(this));
+        this.getCommand("pay").setExecutor(new EconCommand(this));
+        this.getCommand("money").setExecutor(new EconCommand(this));
+        this.getCommand("loan").setExecutor(new EconCommand(this));
+        this.getCommand("cheque").setExecutor(new EconCommand(this));
+        this.getCommand("baltop").setExecutor(new EconCommand(this));
+
+
         getLogger().info("InfinitumEconomy plugin successfully enabled!");
 
     }
@@ -99,7 +108,7 @@ public class InfinitumEconomy extends JavaPlugin {
     }
 
     public static InfinitumEconomy get() {
-        if(instance == null){
+        if (instance == null){
             instance = getPlugin(InfinitumEconomy.class);
         }
         return instance;
