@@ -9,15 +9,14 @@ import org.bukkit.OfflinePlayer;
 import java.util.UUID;
 
 public class Loan implements IJsonConvertible<Loan> {
-    private UUID loanUUID, lenderUUID, borrowerUUID, loanBankUUID;
-    private Currency usedCurrency;
+    private UUID loanUUID, lenderUUID, borrowerUUID, loanBankUUID, usedCurrencyUUID;
     private double value, interestRate;
 
     // Loan from player account
-    public Loan(OfflinePlayer borrower, OfflinePlayer loaner, double value, double interestRate, Currency currency){
+    public Loan(OfflinePlayer borrower, OfflinePlayer loaner, double value, double interestRate, UUID currency){
         this.lenderUUID = borrower.getUniqueId();
         this.borrowerUUID = loaner.getUniqueId();
-        this.usedCurrency = currency;
+        this.usedCurrencyUUID = currency;
         this.value = value;
         this.interestRate = interestRate;
         this.loanUUID = UUID.randomUUID();
@@ -25,10 +24,10 @@ public class Loan implements IJsonConvertible<Loan> {
     }
 
     // Loan from bank account
-    public Loan(OfflinePlayer borrower, Bank loanBank, double value, double interestRate, Currency currency){
+    public Loan(OfflinePlayer borrower, Bank loanBank, double value, double interestRate, UUID currency){
         this.lenderUUID = borrower.getUniqueId();
         this.borrowerUUID = null;
-        this.usedCurrency = currency;
+        this.usedCurrencyUUID = currency;
         this.value = value;
         this.interestRate = interestRate;
         this.loanUUID = UUID.randomUUID();
@@ -51,8 +50,8 @@ public class Loan implements IJsonConvertible<Loan> {
         return loanBankUUID;
     }
 
-    public Currency getUsedCurrency(){
-        return usedCurrency;
+    public UUID getUsedCurrencyUUID(){
+        return usedCurrencyUUID;
     }
 
     public void setInterestRate(double interestRate){
@@ -78,7 +77,7 @@ public class Loan implements IJsonConvertible<Loan> {
         jsonObject.addProperty("lender", lenderUUID.toString());
         jsonObject.addProperty("borrower", borrowerUUID.toString());
         jsonObject.addProperty("bank", loanBankUUID.toString());
-        jsonObject.add("currency", usedCurrency.toJson());
+        jsonObject.addProperty("currency", usedCurrencyUUID.toString());
         jsonObject.addProperty("value", value);
         jsonObject.addProperty("interestRate", interestRate);
         return jsonObject;
@@ -90,10 +89,7 @@ public class Loan implements IJsonConvertible<Loan> {
         this.lenderUUID = UUID.fromString(object.get("lender").getAsString());
         this.borrowerUUID = UUID.fromString(object.get("borrower").getAsString());
         this.loanBankUUID = UUID.fromString(object.get("bank").getAsString());
-        Currency temp = CurrencyDatabase.DEFAULT_CURRENCY;
-        temp.fromJson(object.get("currency").getAsJsonObject());
-
-        this.usedCurrency = temp;
+        this.usedCurrencyUUID = UUID.fromString(object.get("currency").getAsString());
         this.value = object.get("value").getAsDouble();
         this.interestRate = object.get("interestRate").getAsDouble();
     }
