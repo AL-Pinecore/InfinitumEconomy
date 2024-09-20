@@ -35,6 +35,17 @@ public class InfinitumEconomy extends JavaPlugin {
         this.saveDefaultConfig();
         config = getConfig();
 
+//        try {
+//            AccountSQLDatabase accountSQLDatabase = new AccountSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+//            BankSQLDatabase bankSQLDatabase = new BankSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+//            ChequeSQLDatabase chequeSQLDatabase = new ChequeSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+//            CurrencyDatabase currencyDatabase = new CurrencyDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+//            AccountSQLDatabase accountSQLDatabase = new AccountSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
         if (!getDataFolder().exists()){
             if (!getDataFolder().mkdirs()){
                 getLogger().severe("Disabled due to failed to create plugin data folder!");

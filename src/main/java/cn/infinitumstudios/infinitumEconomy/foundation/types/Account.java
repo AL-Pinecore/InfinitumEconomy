@@ -64,26 +64,35 @@ public class Account implements IJsonConvertible<Account> {
         return wallet;
     }
 
+    @Deprecated
     public void setBalance(double balance, Currency of) {
         this.wallet.setBalance(balance, of);
     }
 
+    @Deprecated
     public void setBalance(double balance) {
         this.setBalance(balance, CurrencyDatabase.DEFAULT_CURRENCY);
     }
 
+    @Deprecated
     public boolean incrementBalance(double amount, Currency of) {
         return this.wallet.incrementBalance(amount, of);
     }
 
+    @Deprecated
     public boolean incrementBalance(double amount) {
         return this.incrementBalance(amount, CurrencyDatabase.DEFAULT_CURRENCY);
     }
 
+    @Deprecated
     public boolean decrementBalance(double amount, Currency of) {
         return this.wallet.decrementBalance(amount, of);
     }
 
+    /**
+     * Decrease the balance of an economy account, this has been deprecated and been moved to the {@link Wallet} class.
+     */
+    @Deprecated
     public boolean decrementBalance(double amount) {
         return this.decrementBalance(amount, CurrencyDatabase.DEFAULT_CURRENCY);
     }

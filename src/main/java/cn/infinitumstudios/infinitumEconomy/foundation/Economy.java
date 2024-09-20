@@ -1,11 +1,9 @@
 package cn.infinitumstudios.infinitumEconomy.foundation;
 
-import cn.infinitumstudios.infinitumEconomy.InfinitumEconomy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -94,7 +92,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #hasAccount(OfflinePlayer)} instead.
+     * @deprecated As of Economy 1.4 use {@link #hasAccount(OfflinePlayer)} instead.
      */
     @Override
     @Deprecated
@@ -122,7 +120,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #hasAccount(OfflinePlayer, String)} instead.
+     * @deprecated As of Economy 1.4 use {@link #hasAccount(OfflinePlayer, String)} instead.
      */
     @Override
     @Deprecated
@@ -146,7 +144,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #getBalance(OfflinePlayer)} instead.
+     * @deprecated As of Economy 1.4 use {@link #getBalance(OfflinePlayer)} instead.
      */
     @Override
     @Deprecated
@@ -167,7 +165,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #getBalance(OfflinePlayer, String)} instead.
+     * @deprecated As of Economy 1.4 use {@link #getBalance(OfflinePlayer, String)} instead.
      */
     @Override
     @Deprecated
@@ -190,7 +188,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #has(OfflinePlayer, double)} instead.
+     * @deprecated As of Economy 1.4 use {@link #has(OfflinePlayer, double)} instead.
      */
     @Override
     @Deprecated
@@ -212,7 +210,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use @{link {@link #has(OfflinePlayer, String, double)} instead.
+     * @deprecated As of Economy 1.4 use @{link {@link #has(OfflinePlayer, String, double)} instead.
      */
     @Override
     @Deprecated
@@ -236,7 +234,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #withdrawPlayer(OfflinePlayer, double)} instead.
+     * @deprecated As of Economy 1.4 use {@link #withdrawPlayer(OfflinePlayer, double)} instead.
      */
     @Override
     @Deprecated
@@ -257,7 +255,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #withdrawPlayer(OfflinePlayer, String, double)} instead.
+     * @deprecated As of Economy 1.4 use {@link #withdrawPlayer(OfflinePlayer, String, double)} instead.
      */
     @Override
     @Deprecated
@@ -280,7 +278,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #depositPlayer(OfflinePlayer, double)} instead.
+     * @deprecated As of Economy 1.4 use {@link #depositPlayer(OfflinePlayer, double)} instead.
      */
     @Override
     @Deprecated
@@ -301,7 +299,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #depositPlayer(OfflinePlayer, String, double)} instead.
+     * @deprecated As of Economy 1.4 use {@link #depositPlayer(OfflinePlayer, String, double)} instead.
      */
     @Override
     @Deprecated
@@ -324,7 +322,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {{@link #createBank(String, OfflinePlayer)} instead.
+     * @deprecated As of Economy 1.4 use {{@link #createBank(String, OfflinePlayer)} instead.
      */
     @Override
     @Deprecated
@@ -403,7 +401,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {{@link #isBankOwner(String, OfflinePlayer)} instead.
+     * @deprecated As of Economy 1.4 use {{@link #isBankOwner(String, OfflinePlayer)} instead.
      */
     @Override
     @Deprecated
@@ -424,7 +422,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {@link #isBankMember(String, OfflinePlayer)} instead.
+     * @deprecated As of Economy 1.4 use {@link #isBankMember(String, OfflinePlayer)} instead.
      */
     @Override
     @Deprecated
@@ -457,7 +455,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {{@link #createPlayerAccount(OfflinePlayer)} instead.
+     * @deprecated As of Economy 1.4 use {{@link #createPlayerAccount(OfflinePlayer)} instead.
      */
     @Override
     @Deprecated
@@ -477,7 +475,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     }
 
     /**
-     * @deprecated As of VaultAPI 1.4 use {{@link #createPlayerAccount(OfflinePlayer, String)} instead.
+     * @deprecated As of Economy 1.4 use {{@link #createPlayerAccount(OfflinePlayer, String)} instead.
      */
     @Override
     @Deprecated

@@ -4,8 +4,10 @@ ConfigVersion: 1.0
 
 # Ways to storage data
 # JSON | SQLITE
-
-DataStorageType: SQLITE
+# Once you change this setting, you need to restart the server to make the setting work
+# if there are other database exists (economy.json or economy.db), then it will automatically convert the database type and all values in the database.
+DataStorageType: JSON
+# In the future, we will support mySQL to storage the data of the plugin.
 
 EnableMultipleCurrency: true
 EnableBanksAndVaults: true

@@ -24,12 +24,12 @@ public class AccountSQLDatabase {
     }
 
     /**
-     * Creates an economy account.
+     * Creates/register an economy account into the database.
      * @param account an instance of the Account class.
-     * @return Returns true if created successfully.
+     * @return Returns true if created successfully. Returns false if the account is already existed in the database, or failed to create an account.
      */
     public boolean createAccount(Account account){
-        if (account == null) return false;
+        if (account == null || hasAccount(account.getAccountHolder())) return false;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO account (Nickname, AccountUUID, AccountHolderUUID) VALUES (?,?,?)")){
             preparedStatement.setString(1,account.getNickname());
@@ -44,16 +44,16 @@ public class AccountSQLDatabase {
     }
 
     /**
-     * Deletes an economy account.
-     * @param account an instance of the Account class.
+     * Deletes an economy account from the database.
+     * @param playerUUID UUID of the player
      * @return Returns true if deleted successfully.
      */
 
-    public boolean removeAccount(Account account){
-        if (account == null) return false;
+    public boolean deleteAccount (UUID playerUUID){
+        if (playerUUID == null) return false;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM account WHERE AccountHolderUUID = ?")){
-            preparedStatement.setString(1,account.getAccountHolder().toString());
+            preparedStatement.setString(1,playerUUID.toString());
             preparedStatement.executeUpdate();
         } catch (SQLException e){
             return false;
@@ -63,9 +63,9 @@ public class AccountSQLDatabase {
     }
 
     /**
-     * See if a player's economy account exists.
+     * See if a player's economy account exists in the database.
      * @param playerUUID player's UUID in server.
-     * @return Returns true if deleted successfully.
+     * @return Returns true if the account is deleted successfully.
      */
 
     public boolean hasAccount(UUID playerUUID) {
@@ -79,9 +79,9 @@ public class AccountSQLDatabase {
     }
 
     /**
-     * Get a player's economy account.
+     * Get a player's economy account from the database.
      * @param playerUUID player's UUID in server.
-     * @return Returns true if deleted successfully.
+     * @return Returns a player's economy account instance of class {@link Account}
      */
     public @Nullable Account getAccount(UUID playerUUID){
         if (playerUUID == null) return null;
@@ -115,6 +115,9 @@ public class AccountSQLDatabase {
         return new Account(accountUUID, playerUUID, nickname);
     }
 
+    /**
+     * Close the connection to the SQLite database
+     */
     protected boolean closeConnection() throws SQLException {
         if (connection != null && !connection.isClosed()){
             connection.close();

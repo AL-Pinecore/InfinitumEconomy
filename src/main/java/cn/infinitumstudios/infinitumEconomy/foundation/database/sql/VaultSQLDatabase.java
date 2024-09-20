@@ -18,6 +18,6 @@ public class VaultSQLDatabase {
                     CurrencyUUID TEXT PRIMARY KEY,
                     Value DOUBLE(24, 2) DEFAULT 0
                 )
-                """);
+        """);
     }
 }

@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import java.util.UUID;
 
 public class Vault implements IJsonConvertible<Vault> {
-    private UUID vaultUUID, owner;
+    private UUID vaultUUID, owner, bankUUID;
     private String name;
     private double value;
 
@@ -23,6 +23,10 @@ public class Vault implements IJsonConvertible<Vault> {
 
     public void setVaultUUID(UUID vaultUUID) {
         this.vaultUUID = vaultUUID;
+    }
+
+    public UUID getOwnedBank(){
+        return bankUUID;
     }
 
     public UUID getOwner() {
