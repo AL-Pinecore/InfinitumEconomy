@@ -7,13 +7,34 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Account implements IJsonConvertible<Account> {
+
+    /**
+     * Economy account UUID
+     */
     private final UUID accountUUID;
+
+    /**
+     * Economy account holder's UUID
+     */
     private UUID accountHolder;
+
+    /**
+     * Nickname of the economy account
+     */
     private String nickname;
+
+    /**
+     * An economy account's balance (uses the universal currency), this has been deprecated and been moved to the {@link Wallet} class.
+     */
+    @Deprecated
     private double balance;
 
     public Account(UUID accountHolder, String nickname) {
         this(UUID.randomUUID(), accountHolder, nickname, 0.0);
+    }
+
+    public Account(UUID accountUUID, UUID accountHolder, String nickname) {
+        this(accountUUID,accountHolder,nickname,0.0);
     }
 
     private Account(UUID accountUUID, UUID accountHolder, String nickname, double balance) {

@@ -14,7 +14,7 @@ public class ChequeSQLDatabase {
         statement.execute("""
                 CREATE TABLE IF NOT EXISTS cheque(
                     ChequeUUID TEXT PRIMARY KEY,
-                    Worth DOUBLE(18, 2),
+                    Worth DOUBLE(18, 2) DEFAULT 0,
                     CurrencyUUID TEXT PRIMARY KEY,
                     OwnerAccountUUID TEXT PRIMARY KEY,
                     BankUUID TEXT PRIMARY KEY,

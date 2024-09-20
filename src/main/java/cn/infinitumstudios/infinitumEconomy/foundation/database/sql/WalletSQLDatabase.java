@@ -14,9 +14,9 @@ public class WalletSQLDatabase {
         Statement statement = connection.createStatement();
         statement.execute("""
                 CREATE TABLE IF NOT EXISTS wallet(
-                    OwnerAccountUUID varchar(36),
-                    CurrencyUUID varchar(36),
-                    Value DOUBLE(18, 2)
+                    OwnerAccountUUID TEXT PRIMARY KEY,
+                    CurrencyUUID TEXT PRIMARY KEY,
+                    Value DOUBLE(18, 2) DEFAULT 0
                 )
                 """);
     }

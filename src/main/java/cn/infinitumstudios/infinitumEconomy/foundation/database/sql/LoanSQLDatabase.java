@@ -19,7 +19,7 @@ public class LoanSQLDatabase {
                     LenderAccountUUID TEXT PRIMARY KEY,
                     BorrowerAccountUUID TEXT PRIMARY KEY,
                     BankUUID TEXT PRIMARY KEY,
-                    InterestRate DECIMAL(5,4)
+                    InterestRate DECIMAL(5,4) DEFAULT 100
                 )
                 """);
     }

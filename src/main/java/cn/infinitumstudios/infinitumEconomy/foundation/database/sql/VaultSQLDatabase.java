@@ -16,7 +16,7 @@ public class VaultSQLDatabase {
                     VaultUUID TEXT PRIMARY KEY,
                     OwnedBankUUID TEXT PRIMARY KEY,
                     CurrencyUUID TEXT PRIMARY KEY,
-                    Value DOUBLE(24, 2)
+                    Value DOUBLE(24, 2) DEFAULT 0
                 )
                 """);
     }

@@ -34,6 +34,15 @@ public class InfinitumEconomy extends JavaPlugin {
 
         this.saveDefaultConfig();
         config = getConfig();
+
+        if (!getDataFolder().exists()){
+            if (!getDataFolder().mkdirs()){
+                getLogger().severe("Disabled due to failed to create plugin data folder!");
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+        }
+
         getLogger().info(getDataFolder().toString());
 
         Bukkit.getServer().getServicesManager().register(Economy.class, new Economy(), this, ServicePriority.Highest);

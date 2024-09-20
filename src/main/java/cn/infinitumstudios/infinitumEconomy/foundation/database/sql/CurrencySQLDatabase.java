@@ -18,7 +18,7 @@ public class CurrencySQLDatabase {
                     CurrencyName TEXT NOT NULL,
                     CurrencyPluralName TEXT NOT NULL,
                     CurrencySymbol CHAR,
-                    UniversalWorth DECIMAL(8, 6)
+                    UniversalWorth DECIMAL(8, 6) DEFAULT 1
                 )
                 """);
     }
