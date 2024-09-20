@@ -1,14 +1,15 @@
 package cn.infinitumstudios.infinitumEconomy.foundation;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
 import com.google.gson.JsonObject;
 
 import java.util.UUID;
 
 public class Currency implements IJsonConvertible<Currency> {
-    private final UUID currencyID;
-    private final String name, pluralName, symbol;
-    private final double currencyWorth;
+    private UUID currencyID;
+    private String name, pluralName, symbol;
+    private double currencyWorth;
 
     public Currency(String name, String pluralName, String symbol, double currencyWorth) {
         this(UUID.randomUUID(), name, pluralName, symbol, currencyWorth);
@@ -60,15 +61,23 @@ public class Currency implements IJsonConvertible<Currency> {
     }
 
     @Override
-    public Currency fromJson(JsonObject object) {
-        return new Currency(UUID.fromString(object.get("currencyID").getAsString()),
-                object.get("name").getAsString(),
-                object.get("pluralName").getAsString(),
-                object.get("symbol").getAsString(),
-                object.get("currencyWorth").getAsDouble());
+    public void fromJson(JsonObject object) {
+        this.currencyID = UUID.fromString(object.get("currencyID").getAsString());
+        this.name = object.get("name").getAsString();
+        this.pluralName = object.get("pluralName").getAsString();
+        this.symbol = object.get("symbol").getAsString();
+        this.currencyWorth = object.get("currencyWorth").getAsDouble();
     }
 
     public UUID getCurrencyID() {
         return currencyID;
+    }
+
+    public static double convert(double fromValue, Currency from, Currency to) {
+        return fromValue / from.getCurrencyWorth() * to.getCurrencyWorth();
+    }
+
+    public static double convert(double fromValue, Currency from) {
+        return convert(fromValue, from, CurrencyDatabase.DEFAULT_CURRENCY);
     }
 }

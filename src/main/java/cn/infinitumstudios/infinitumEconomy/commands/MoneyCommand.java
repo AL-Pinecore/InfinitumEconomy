@@ -2,6 +2,7 @@ package cn.infinitumstudios.infinitumEconomy.commands;
 
 import cn.infinitumstudios.infinitumEconomy.InfinitumEconomy;
 import cn.infinitumstudios.infinitumEconomy.foundation.database.AccountDatabase;
+import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

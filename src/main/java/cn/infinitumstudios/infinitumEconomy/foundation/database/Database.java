@@ -218,7 +218,8 @@ public class Database<T extends IJsonConvertible<T>> {
     private T createItemFromJson(JsonObject jsonObject) {
         try {
             T item = classOfT.getDeclaredConstructor().newInstance();
-            return item.fromJson(jsonObject);
+            item.fromJson(jsonObject);
+            return item;
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
             return null;

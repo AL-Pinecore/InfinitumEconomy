@@ -21,11 +21,15 @@ public class CurrencyDatabase extends Database<Currency> {
 
         Optional<Currency> temp = read(currency -> currency.getName().equals("Fractal") && currency.getPluralName().equals("Fractals"));
 
-        if(temp.isEmpty()) {
+        if(temp.isEmpty()) { // If the returned query result for the default currency returns nothing, create the default currency and save
             DEFAULT_CURRENCY = new Currency("Fractal", "Fractals", "Σ");
             create(DEFAULT_CURRENCY);
             save();
-        }else
+        } else // If default currency exists, set default currency
             DEFAULT_CURRENCY = temp.get();
+    }
+
+    static { // Make sure the DEFAULT_CURRENCY is not null when referenced
+        new CurrencyDatabase().load();
     }
 }

@@ -1,5 +1,7 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.types;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.Currency;
+import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
 import com.google.gson.JsonObject;
 
@@ -8,40 +10,30 @@ import java.util.UUID;
 
 public class Account implements IJsonConvertible<Account> {
 
-    /**
-     * Economy account UUID
-     */
-    private final UUID accountUUID;
+    /// Economy account UUID
+    private UUID accountUUID;
 
-    /**
-     * Economy account holder's UUID
-     */
+    /// Economy account holder's UUID
     private UUID accountHolder;
 
-    /**
-     * Nickname of the economy account
-     */
+    /// Nickname of the economy account
     private String nickname;
 
-    /**
-     * An economy account's balance (uses the universal currency), this has been deprecated and been moved to the {@link Wallet} class.
-     */
-    @Deprecated
-    private double balance;
+    private Wallet wallet;
 
     public Account(UUID accountHolder, String nickname) {
-        this(UUID.randomUUID(), accountHolder, nickname, 0.0);
+        this(UUID.randomUUID(), accountHolder, nickname, Wallet.EMPTY);
     }
 
     public Account(UUID accountUUID, UUID accountHolder, String nickname) {
-        this(accountUUID,accountHolder,nickname,0.0);
+        this(accountUUID, accountHolder, nickname, Wallet.EMPTY);
     }
 
-    private Account(UUID accountUUID, UUID accountHolder, String nickname, double balance) {
+    private Account(UUID accountUUID, UUID accountHolder, String nickname, Wallet wallet) {
         this.accountUUID = accountUUID;
         this.accountHolder = accountHolder;
         this.nickname = nickname;
-        this.balance = balance;
+        this.wallet = wallet;
     }
 
     public Account(UUID accountHolder) {
@@ -68,26 +60,32 @@ public class Account implements IJsonConvertible<Account> {
         return accountUUID;
     }
 
-    public double getBalance() {
-        return balance;
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setBalance(double balance, Currency of) {
+        this.wallet.setBalance(balance, of);
     }
 
     public void setBalance(double balance) {
-        this.balance = Math.max(0, balance);
+        this.setBalance(balance, CurrencyDatabase.DEFAULT_CURRENCY);
+    }
+
+    public boolean incrementBalance(double amount, Currency of) {
+        return this.wallet.incrementBalance(amount, of);
     }
 
     public boolean incrementBalance(double amount) {
-        this.balance += amount;
-        return true;
+        return this.incrementBalance(amount, CurrencyDatabase.DEFAULT_CURRENCY);
+    }
+
+    public boolean decrementBalance(double amount, Currency of) {
+        return this.wallet.decrementBalance(amount, of);
     }
 
     public boolean decrementBalance(double amount) {
-        if(balance - amount < 0) return false;
-
-        this.balance -= amount;
-        this.balance = Math.max(this.balance, 0.0d);
-
-        return true;
+        return this.decrementBalance(amount, CurrencyDatabase.DEFAULT_CURRENCY);
     }
 
     @Override
@@ -108,12 +106,17 @@ public class Account implements IJsonConvertible<Account> {
         jsonObject.addProperty("accountUUID", accountUUID.toString());
         jsonObject.addProperty("accountHolder", accountHolder.toString());
         jsonObject.addProperty("nickname", nickname);
-        jsonObject.addProperty("balance", balance);
+        jsonObject.add("wallet", wallet.toJson());
         return jsonObject;
     }
 
     @Override
-    public Account fromJson(final JsonObject object) {
-        return new Account(UUID.fromString(object.get("accountUUID").getAsString()), UUID.fromString(object.get("accountHolder").getAsString()), object.get("nickname").getAsString(), object.get("balance").getAsDouble());
+    public void fromJson(final JsonObject object) {
+        this.accountUUID = UUID.fromString(object.get("accountUUID").getAsString());
+        this.accountHolder = UUID.fromString(object.get("accountHolder").getAsString());
+        this.nickname = object.get("nickname").getAsString();
+        Wallet temp = Wallet.EMPTY;
+        temp.fromJson(object.getAsJsonObject("wallet"));
+        this.wallet = temp;
     }
 }
