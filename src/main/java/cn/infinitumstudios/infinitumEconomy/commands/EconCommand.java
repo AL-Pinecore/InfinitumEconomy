@@ -38,26 +38,23 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
             return false;
         }
 
-        if(args.length <= 0) {
+        if(args.length == 0) {
             commandSender.sendMessage(getUsage());
             return false;
         }
 
         String[] truncatedArgs = Arrays.copyOfRange(args, 1, args.length);
 
-        switch (args[0].toLowerCase()) {
-            case "pay":
-                return payCommand.execute(commandSender, truncatedArgs);
-            case "loan":
-                return loanCommand.execute(commandSender, truncatedArgs);
-            case "cheque":
-                return chequeCommand.execute(commandSender, truncatedArgs);
-            case "baltop":
-                return baltopCommand.execute(commandSender, truncatedArgs);
-            default:
+        return switch (args[0].toLowerCase()) {
+            case "pay" -> payCommand.execute(commandSender, truncatedArgs);
+            case "loan" -> loanCommand.execute(commandSender, truncatedArgs);
+            case "cheque" -> chequeCommand.execute(commandSender, truncatedArgs);
+            case "baltop" -> baltopCommand.execute(commandSender, truncatedArgs);
+            default -> {
                 commandSender.sendMessage(getUsage());
-                return false;
-        }
+                yield false;
+            }
+        };
     }
 
     @Override
