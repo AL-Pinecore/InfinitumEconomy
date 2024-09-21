@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ChequeSQLDatabase {
+
+    // TODO Cheque SQL
     private final Connection connection;
 
     public ChequeSQLDatabase(String path) throws SQLException {

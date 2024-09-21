@@ -15,6 +15,7 @@ public class BaltopCommand extends InfinitumSubcommand{
         super(command);
     }
     // Shows the balance top list to player/console
+    // TODO finish the Balance Top Command
 
     @Override
     public void reloadCommand(InfinitumCommand command) {

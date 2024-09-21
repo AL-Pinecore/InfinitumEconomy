@@ -7,6 +7,8 @@ import java.sql.Statement;
 
 public class WalletSQLDatabase {
 
+    // TODO Wallet SQL
+
     private final Connection connection;
 
     public WalletSQLDatabase(String path) throws SQLException {

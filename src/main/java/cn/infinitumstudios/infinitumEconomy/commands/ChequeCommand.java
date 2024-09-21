@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ChequeCommand extends InfinitumSubcommand{
+    // TODO finish the cheque commands
     public ChequeCommand(InfinitumCommand command) {
         super(command);
     }

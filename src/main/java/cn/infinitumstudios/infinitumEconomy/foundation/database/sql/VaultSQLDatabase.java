@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class VaultSQLDatabase {
+
+    // TODO Vault SQL
     private final Connection connection;
 
     public VaultSQLDatabase(String path) throws SQLException {

@@ -4,12 +4,17 @@ import cn.infinitumstudios.infinitumEconomy.foundation.database.AccountDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Bank;
 
+import javax.annotation.Nullable;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class BankSQLDatabase {
     private final Connection connection;
+
+    // TODO Bank SQL
 
     public BankSQLDatabase (String path) throws SQLException {
         this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
@@ -52,11 +57,12 @@ public class BankSQLDatabase {
         return true;
     }
 
-    public Bank[] getBanks (UUID ownerUUID){
+    public @Nullable Bank[] getBanks (UUID ownerUUID){
+        List<Bank> foundedBanks = new ArrayList<>();
         return null;
     }
 
-    public Bank getBank (UUID bankUUID){
+    public @Nullable Bank getBank (UUID bankUUID){
         return null;
     }
 

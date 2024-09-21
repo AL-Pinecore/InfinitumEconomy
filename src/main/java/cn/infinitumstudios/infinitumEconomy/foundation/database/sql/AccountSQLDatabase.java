@@ -10,6 +10,7 @@ public class AccountSQLDatabase {
 
     private final Connection connection;
 
+    // TODO (SQLite) supports the Balance in Account class
     public AccountSQLDatabase(String path) throws SQLException {
         this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         try (Statement statement = connection.createStatement()) {
@@ -126,6 +127,4 @@ public class AccountSQLDatabase {
             return false;
         }
     }
-
-
 }
