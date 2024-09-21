@@ -5,6 +5,7 @@ import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
 import cn.infinitumstudios.infinitumEconomy.foundation.VaultAPI;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.database.AccountDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -75,6 +76,7 @@ public class InfinitumEconomy extends JavaPlugin {
         this.getCommand("cheque").setExecutor(new EconCommand(this));
         this.getCommand("baltop").setExecutor(new EconCommand(this));
 
+        AccountDatabase.init();
 
         getLogger().info("InfinitumEconomy plugin successfully enabled!");
 

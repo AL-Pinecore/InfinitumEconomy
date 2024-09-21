@@ -29,10 +29,6 @@ public class AccountDatabase extends Database<Account> {
      */
     public AccountDatabase() {
         super(Reference.ACCOUNT_DATABASE_NAME, Account.class, new File(Path.of(Reference.DATA_FILES_DIRECTORY.toString(), Reference.ACCOUNT_DATABASE_NAME + ".json").toUri()));
-
-        PlayerJoinEvent.EVENT.register(event -> {
-            refreshPlayerEntries();
-        });
     }
 
     /**
@@ -102,5 +98,11 @@ public class AccountDatabase extends Database<Account> {
 
     public boolean update(Predicate<Account> accountPredicate, UnaryOperator<Account> account) {
         return super.update(accountPredicate, account);
+    }
+
+    public static void init(){
+        PlayerJoinEvent.EVENT.register(event -> {
+            new AccountDatabase().refreshPlayerEntries();
+        });
     }
 }
