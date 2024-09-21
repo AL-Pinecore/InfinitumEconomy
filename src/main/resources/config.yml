@@ -11,3 +11,4 @@ DataStorageType: JSON
 
 EnableMultipleCurrency: true
 EnableBanksAndVaults: true
+EnableBuyCommand: true
