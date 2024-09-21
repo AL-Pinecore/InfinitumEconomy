@@ -224,6 +224,10 @@ public class Database<T extends IJsonConvertible<T>> {
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e) {
+            // Handle case where JSON might not contain all required fields
+            e.printStackTrace();
+            return null;
         }
     }
 

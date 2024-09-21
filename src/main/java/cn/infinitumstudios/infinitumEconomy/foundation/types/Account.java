@@ -22,6 +22,10 @@ public class Account implements IJsonConvertible<Account> {
 
     private Wallet wallet;
 
+    public Account() {
+        this(UUID.randomUUID(), UUID.randomUUID(), "", Wallet.EMPTY);
+    }
+
     public Account(UUID accountHolder, String nickname) {
         this(UUID.randomUUID(), accountHolder, nickname, Wallet.EMPTY);
     }
