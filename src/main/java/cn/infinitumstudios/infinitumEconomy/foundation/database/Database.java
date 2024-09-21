@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -227,12 +228,26 @@ public class Database<T extends IJsonConvertible<T>> {
     }
 
     private void createDefaultFile() {
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            JsonObject obj = new JsonObject();
-            JsonArray jsonArray = new JsonArray();
-            obj.add("items", jsonArray);
-            fileWriter.write(obj.toString());
-            fileWriter.flush();
+        try {
+            // Ensure the parent directory exists
+            File parentDir = file.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                Files.createDirectories(parentDir.toPath());
+            }
+
+            // Create the file
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            // Write default content
+            try (FileWriter fileWriter = new FileWriter(file)) {
+                JsonObject obj = new JsonObject();
+                JsonArray jsonArray = new JsonArray();
+                obj.add("items", jsonArray);
+                fileWriter.write(obj.toString());
+                fileWriter.flush();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
