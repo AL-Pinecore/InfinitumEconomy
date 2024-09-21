@@ -10,13 +10,5 @@ description: An economy plugin for Bukkit Minecraft server
 commands:
   econ:
     description: Economy operation
-  pay:
-    description: Pay money to other player(s)
   money:
     description: Economy Account Money operation
-  loan:
-    description: loan operation
-  cheque:
-    description: cheque operation
-  baltop:
-    description: top balance in server
