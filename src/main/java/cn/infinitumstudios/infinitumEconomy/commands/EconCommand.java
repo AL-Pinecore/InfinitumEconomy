@@ -22,6 +22,9 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
     protected LoanCommand loanCommand;
     protected ChequeCommand chequeCommand;
     protected BaltopCommand baltopCommand;
+    protected BalanceCommand balanceCommand;
+    protected SellCommand sellCommand;
+    protected BuyCommand buyCommand;
 
     public EconCommand(InfinitumEconomy plugin) {
         super(plugin);
@@ -29,6 +32,9 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
         loanCommand = new LoanCommand(this);
         chequeCommand = new ChequeCommand(this);
         baltopCommand = new BaltopCommand(this);
+        balanceCommand = new BalanceCommand(this);
+        sellCommand = new SellCommand(this);
+        buyCommand = new BuyCommand(this);
     }
 
     @Override
@@ -50,6 +56,9 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
             case "loan" -> loanCommand.execute(commandSender, truncatedArgs);
             case "cheque" -> chequeCommand.execute(commandSender, truncatedArgs);
             case "baltop" -> baltopCommand.execute(commandSender, truncatedArgs);
+            case "balance" -> balanceCommand.execute(commandSender, truncatedArgs);
+            case "sell" -> sellCommand.execute(commandSender, truncatedArgs);
+            case "buy" -> buyCommand.execute(commandSender, truncatedArgs);
             default -> {
                 commandSender.sendMessage(getUsage());
                 yield false;
@@ -62,21 +71,22 @@ public class EconCommand extends InfinitumCommand implements CommandExecutor, Ta
         String[] truncatedArgs = Arrays.copyOfRange(args, 1, args.length);
 
         if(args.length == 1){
-            return Arrays.asList("pay", "loan", "cheque", "baltop");
+            return Arrays.asList("pay", "loan", "cheque", "baltop", "balance", "sell", "buy");
         } else if(args.length == 2) {
-            switch (args[0].toLowerCase()) {
-                case "pay":
-                    return payCommand.tabComplete(commandSender, truncatedArgs);
-                case "loan":
-                    return loanCommand.tabComplete(commandSender, truncatedArgs);
-                case "cheque":
-                    return chequeCommand.tabComplete(commandSender, truncatedArgs);
-                case "baltop":
-                    return baltopCommand.tabComplete(commandSender, truncatedArgs);
-                default:
+            return switch (args[0].toLowerCase()) {
+                case "pay" -> payCommand.tabComplete(commandSender, truncatedArgs);
+                case "loan" -> loanCommand.tabComplete(commandSender, truncatedArgs);
+                case "cheque" -> chequeCommand.tabComplete(commandSender, truncatedArgs);
+                case "baltop" -> baltopCommand.tabComplete(commandSender, truncatedArgs);
+                case "balance" -> balanceCommand.tabComplete(commandSender, truncatedArgs);
+                case "sell" -> sellCommand.tabComplete(commandSender, truncatedArgs);
+                case "buy" -> buyCommand.tabComplete(commandSender, truncatedArgs);
+
+                default -> {
                     commandSender.sendMessage(getUsage());
-                    return null;
-            }
+                    yield null;
+                }
+            };
         } else {
             return null;
         }
