@@ -4,6 +4,8 @@ import cn.infinitumstudios.infinitumEconomy.foundation.database.AccountDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.database.BankDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
+import cn.infinitumstudios.infinitumEconomy.foundation.types.Bank;
+import cn.infinitumstudios.infinitumEconomy.foundation.types.Vault;
 import com.google.common.util.concurrent.AtomicDouble;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -14,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     /**
@@ -374,13 +375,9 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public EconomyResponse createBank(String name, String player) {
-        BankDatabase db = new BankDatabase();
         Optional<OfflinePlayer> temp = Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(player)).findFirst();
-        db.load();
         if(temp.isEmpty()) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player does not exist.");
-        boolean response = db.create(name, temp.get());
-        if(response) return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.SUCCESS, "");
-        else return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.FAILURE, "Cannot create bank due to certain reasons.");
+        return createBank(name, temp.get());
     }
 
     /**
@@ -392,7 +389,14 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse createBank(String name, OfflinePlayer player) {
-        return null;
+        BankDatabase db = new BankDatabase();
+        db.load();
+        boolean response = db.create(name, player);
+        if (response) {
+            db.save();
+            return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.SUCCESS, "");
+        } else
+            return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.FAILURE, "Cannot create bank due to certain reasons.");
     }
 
     /**
@@ -403,7 +407,14 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse deleteBank(String name) {
-        return null;
+        BankDatabase db = new BankDatabase();
+        db.load();
+        boolean response = db.delete(name);
+        if (response) {
+            db.save();
+            return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.SUCCESS, "");
+        } else
+            return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.FAILURE, "Cannot delete bank due to certain reasons.");
     }
 
     /**
@@ -414,7 +425,17 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse bankBalance(String name) {
-        return null;
+        BankDatabase db = new BankDatabase();
+        db.load();
+        Optional<Bank> temp = db.read(bank -> bank.getName().equalsIgnoreCase(name));
+        if (temp.isEmpty())
+            return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exist.");
+
+        AtomicDouble atomicDouble = new AtomicDouble(0);
+        temp.get().getVaults().forEach(vault -> {
+            atomicDouble.addAndGet(vault.getValue());
+        });
+        return new EconomyResponse(atomicDouble.get(), atomicDouble.get(), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     /**
@@ -426,7 +447,11 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse bankHas(String name, double amount) {
-        return null;
+        EconomyResponse resp = bankBalance(name);
+        if(!resp.transactionSuccess()) return resp;
+
+        if(resp.amount >= amount) return resp;
+        return new EconomyResponse(amount, resp.balance, EconomyResponse.ResponseType.FAILURE, String.format("Not enough money; Still need %s", amount - resp.balance));
     }
 
     /**
@@ -438,7 +463,7 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse bankWithdraw(String name, double amount) {
-        return null;
+        return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED, "Not Implemented due to incompatible reasons");
     }
 
     /**
@@ -450,7 +475,7 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse bankDeposit(String name, double amount) {
-        return null;
+        return new EconomyResponse(0, 0, EconomyResponse.ResponseType.NOT_IMPLEMENTED, "Not Implemented due to incompatible reasons");
     }
 
     /**
@@ -459,7 +484,9 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public EconomyResponse isBankOwner(String name, String playerName) {
-        return null;
+        Optional<OfflinePlayer> temp = Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName)).findFirst();
+        if(temp.isEmpty()) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player does not exist.");
+        return isBankOwner(name, temp.get());
     }
 
     /**
@@ -471,7 +498,11 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
-        return null;
+        BankDatabase db = new BankDatabase();
+        db.load();
+        Optional<Bank> temp = db.read(bank -> bank.getBankOwner().equals(player.getUniqueId()));
+        if(temp.isPresent()) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.SUCCESS, "");
+        else return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exist.");
     }
 
     /**
@@ -480,7 +511,9 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public EconomyResponse isBankMember(String name, String playerName) {
-        return null;
+        Optional<OfflinePlayer> temp = Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName)).findFirst();
+        if(temp.isEmpty()) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player does not exist.");
+        return isBankMember(name, temp.get());
     }
 
     /**
@@ -493,7 +526,15 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     // 查看玩家是否为一个银行的成员
     @Override
     public EconomyResponse isBankMember(String name, OfflinePlayer player) {
-        return null;
+        BankDatabase db = new BankDatabase();
+        db.load();
+        Optional<Bank> mt = db.read(bank -> {
+            Optional<Vault> temp = bank.getVaults().stream().filter(vault -> vault.getOwner().equals(player.getUniqueId())).findFirst();
+            return temp.isPresent();
+        });
+
+        if(mt.isPresent()) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.SUCCESS, "");
+        return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.FAILURE, "Bank or Bank Member does not exist.");
     }
 
     /**
@@ -504,7 +545,9 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     // 返回银行列表，返回类型为字符串数列
     @Override
     public List<String> getBanks() {
-        return null;
+        BankDatabase db = new BankDatabase();
+        db.load();
+        return db.readAll().stream().map(Bank::getName).toList();
     }
 
     /**
@@ -513,7 +556,9 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public boolean createPlayerAccount(String playerName) {
-        return false;
+        Optional<OfflinePlayer> temp = Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName)).findFirst();
+        return temp.filter(this::createPlayerAccount).isPresent();
+
     }
 
     /**
@@ -524,7 +569,11 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public boolean createPlayerAccount(OfflinePlayer player) {
-        return false;
+        AccountDatabase db = new AccountDatabase();
+        db.load();
+        boolean success = db.addAccount(new Account(player.getUniqueId(), player.getName()));
+        db.save();
+        return success;
     }
 
     /**
@@ -533,7 +582,7 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public boolean createPlayerAccount(String playerName, String worldName) {
-        return false;
+        return createPlayerAccount(playerName);
     }
 
     /**
@@ -546,6 +595,6 @@ public class VaultAPI implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
-        return false;
+        return createPlayerAccount(player);
     }
 }
