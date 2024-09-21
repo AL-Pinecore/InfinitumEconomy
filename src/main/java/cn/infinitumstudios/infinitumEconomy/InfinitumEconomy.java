@@ -2,7 +2,7 @@ package cn.infinitumstudios.infinitumEconomy;
 
 import cn.infinitumstudios.infinitumEconomy.commands.EconCommand;
 import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
-import cn.infinitumstudios.infinitumEconomy.foundation.Economy;
+import cn.infinitumstudios.infinitumEconomy.foundation.VaultAPI;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
 import org.bukkit.Bukkit;
@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class InfinitumEconomy extends JavaPlugin {
 
-    private static Economy econ = null;
+    private static VaultAPI econ = null;
     private static net.milkbowl.vault.permission.Permission perms = null;
     private static net.milkbowl.vault.chat.Chat chat = null;
     protected FileConfiguration config;
@@ -57,7 +57,7 @@ public class InfinitumEconomy extends JavaPlugin {
 
         getLogger().info(getDataFolder().toString());
 
-        Bukkit.getServer().getServicesManager().register(Economy.class, new Economy(), this, ServicePriority.Highest);
+        Bukkit.getServer().getServicesManager().register(VaultAPI.class, new VaultAPI(), this, ServicePriority.Highest);
 
         if (!setupEconomy()) {
             getLogger().severe("Disabled due to no Vault dependency found!");
@@ -84,7 +84,7 @@ public class InfinitumEconomy extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<VaultAPI> rsp = getServer().getServicesManager().getRegistration(VaultAPI.class);
         if (rsp == null) {
             return false;
         }
@@ -92,7 +92,7 @@ public class InfinitumEconomy extends JavaPlugin {
         return econ != null;
     }
 
-    public static Economy getEconomy() {
+    public static VaultAPI getEconomy() {
         return econ;
     }
 

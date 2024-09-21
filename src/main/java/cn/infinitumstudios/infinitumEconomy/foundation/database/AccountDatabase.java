@@ -24,6 +24,9 @@ import java.util.function.UnaryOperator;
  */
 public class AccountDatabase extends Database<Account> {
 
+    /**
+     * Everytime you create an account database, you should make sure that it is actually loaded.
+     */
     public AccountDatabase() {
         super(Reference.ACCOUNT_DATABASE_NAME, Account.class, new File(Path.of(Reference.DATA_FILES_DIRECTORY.toString(), Reference.ACCOUNT_DATABASE_NAME + ".json").toUri()));
 
@@ -79,6 +82,22 @@ public class AccountDatabase extends Database<Account> {
      */
     public Optional<Account> getAccount(UUID uuid){
         return read(account -> account.getAccountUUID().equals(uuid));
+    }
+
+    public Optional<Account> getPlayerAccount(UUID uuid){
+        return read(account -> account.getAccountHolder().equals(uuid));
+    }
+
+    public Optional<Account> getPlayerAccount(OfflinePlayer player){
+        return getPlayerAccount(player.getUniqueId());
+    }
+
+    public boolean accountExists(UUID uuid){
+        return getPlayerAccount(uuid).isPresent();
+    }
+
+    public boolean accountExists(OfflinePlayer player){
+        return getPlayerAccount(player).isPresent();
     }
 
     public boolean update(Predicate<Account> accountPredicate, UnaryOperator<Account> account) {

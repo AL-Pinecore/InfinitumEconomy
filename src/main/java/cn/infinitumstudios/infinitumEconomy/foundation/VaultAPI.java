@@ -1,13 +1,22 @@
 package cn.infinitumstudios.infinitumEconomy.foundation;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.database.AccountDatabase;
+import cn.infinitumstudios.infinitumEconomy.foundation.database.BankDatabase;
+import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
+import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
+import com.google.common.util.concurrent.AtomicDouble;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Economy implements net.milkbowl.vault.economy.Economy {
+public class VaultAPI implements net.milkbowl.vault.economy.Economy {
     /**
      * Checks if economy method is enabled.
      *
@@ -25,7 +34,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public String getName() {
-        return null;
+        return "/econ";
     }
 
     /**
@@ -48,7 +57,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 返回约分后的值，-1为没进行任何约分
     @Override
     public int fractionalDigits() {
-        return 0;
+        return 2;
     }
 
     /**
@@ -61,7 +70,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 整形
     @Override
     public String format(double amount) {
-        return null;
+        return CurrencyDatabase.DEFAULT_CURRENCY.value(amount);
     }
 
     /**
@@ -74,7 +83,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 请返回默认名称(plural)
     @Override
     public String currencyNamePlural() {
-        return null;
+        return CurrencyDatabase.DEFAULT_CURRENCY.getPluralName();
     }
 
 
@@ -88,7 +97,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 请返回默认名称(singular)
     @Override
     public String currencyNameSingular() {
-        return null;
+        return CurrencyDatabase.DEFAULT_CURRENCY.getName();
     }
 
     /**
@@ -97,12 +106,11 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public boolean hasAccount(String playerName) {
-        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-            if(Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName)){
+        Optional<OfflinePlayer> player = Arrays.stream(Bukkit.getOfflinePlayers())
+                .filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName))
+                .findFirst();
 
-            }
-        }
-        return false;
+        return player.filter(this::hasAccount).isPresent();
     }
 
     /**
@@ -116,7 +124,9 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 玩家是否拥有经济帐户
     @Override
     public boolean hasAccount(OfflinePlayer player) {
-        return false;
+        AccountDatabase db = new AccountDatabase();
+        db.load();
+        return db.accountExists(player);
     }
 
     /**
@@ -125,7 +135,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public boolean hasAccount(String playerName, String worldName) {
-        return false;
+        return hasAccount(playerName);
     }
 
     /**
@@ -140,7 +150,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 玩家是否拥有经济帐户
     @Override
     public boolean hasAccount(OfflinePlayer player, String worldName) {
-        return false;
+        return hasAccount(player);
     }
 
     /**
@@ -149,7 +159,12 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public double getBalance(String playerName) {
-        return 0;
+        Optional<@NotNull OfflinePlayer> temp =Arrays.stream(Bukkit.getOfflinePlayers())
+                .filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName))
+                .findFirst();
+
+        return temp.map(this::getBalance).orElse(0.0);
+
     }
 
     /**
@@ -161,7 +176,10 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 获取玩家所拥有的钱的总量，换算为default货币
     @Override
     public double getBalance(OfflinePlayer player) {
-        return 0;
+        AccountDatabase db = new AccountDatabase();
+        db.load();
+        Optional<Account> temp = db.getPlayerAccount(player);
+        return temp.map(Account::getBaseBalance).orElse(0.0);
     }
 
     /**
@@ -170,7 +188,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public double getBalance(String playerName, String world) {
-        return 0;
+        return getBalance(playerName);
     }
 
     /**
@@ -184,7 +202,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 获取玩家所拥有的钱的总量，换算为default货币
     @Override
     public double getBalance(OfflinePlayer player, String world) {
-        return 0;
+        return getBalance(player);
     }
 
     /**
@@ -193,7 +211,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public boolean has(String playerName, double amount) {
-        return false;
+        return getBalance(playerName) >= amount;
     }
 
     /**
@@ -206,7 +224,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     // 查看玩家是否拥有amount的钱（够不够），请返回GlobalBalance并且换算为default货币
     @Override
     public boolean has(OfflinePlayer player, double amount) {
-        return false;
+        return getBalance(player) >= amount;
     }
 
     /**
@@ -215,7 +233,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public boolean has(String playerName, String worldName, double amount) {
-        return false;
+        return getBalance(playerName) >= amount;
     }
 
     /**
@@ -230,7 +248,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     // 查看玩家是否拥有amount的钱（够不够），请返回GlobalBalance并且换算为default货币
     public boolean has(OfflinePlayer player, String worldName, double amount) {
-        return false;
+        return getBalance(player) >= amount;
     }
 
     /**
@@ -251,7 +269,19 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
-        return null;
+        AccountDatabase db = new AccountDatabase();
+        db.load();
+        Optional<Account> temp = db.getPlayerAccount(player);
+        if(temp.isEmpty()) return new EconomyResponse(amount, 0, EconomyResponse.ResponseType.FAILURE, "Player Account does not exist.");
+        if(!has(player, amount)) return new EconomyResponse(amount, temp.get().getBaseBalance(), EconomyResponse.ResponseType.FAILURE, "Player Account does not have sufficient amount of balance.");
+
+        db.update(account -> account.equals(temp.get()), account -> {
+            account.decrementBalance(amount);
+            return account;
+        });
+        db.save();
+
+        return new EconomyResponse(amount, temp.get().getBaseBalance(), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     /**
@@ -260,7 +290,13 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public EconomyResponse withdrawPlayer(String playerName, String worldName, double amount) {
-        return null;
+        Optional<@NotNull OfflinePlayer> temp = Arrays.stream(Bukkit.getOfflinePlayers())
+                .filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(playerName))
+                .findFirst();
+
+        if(temp.isEmpty()) return new EconomyResponse(amount, 0, EconomyResponse.ResponseType.FAILURE, "Player does not exist.");
+
+        return withdrawPlayer(temp.get(), amount);
     }
 
     /**
@@ -274,7 +310,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, String worldName, double amount) {
-        return null;
+        return withdrawPlayer(player, amount);
     }
 
     /**
@@ -295,7 +331,18 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
-        return null;
+        AccountDatabase db = new AccountDatabase();
+        db.load();
+        if(!db.accountExists(player)) return new EconomyResponse(amount, 0, EconomyResponse.ResponseType.FAILURE, "Player Account does not exist.");
+        AtomicDouble count = new AtomicDouble(0);
+        db.update(account -> account.isPlayerAccountHolder(player), account -> {
+            account.incrementBalance(amount);
+            count.set(account.getBaseBalance());
+            return account;
+        });
+        db.save();
+
+        return new EconomyResponse(amount, count.get(), EconomyResponse.ResponseType.SUCCESS, "");
     }
 
     /**
@@ -304,7 +351,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
-        return null;
+        return depositPlayer(playerName, amount);
     }
 
     /**
@@ -318,7 +365,7 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
      */
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, String worldName, double amount) {
-        return null;
+        return depositPlayer(player, amount);
     }
 
     /**
@@ -327,7 +374,13 @@ public class Economy implements net.milkbowl.vault.economy.Economy {
     @Override
     @Deprecated
     public EconomyResponse createBank(String name, String player) {
-        return null;
+        BankDatabase db = new BankDatabase();
+        Optional<OfflinePlayer> temp = Arrays.stream(Bukkit.getOfflinePlayers()).filter(offlinePlayer -> Objects.requireNonNull(offlinePlayer.getName()).equalsIgnoreCase(player)).findFirst();
+        db.load();
+        if(temp.isEmpty()) return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Player does not exist.");
+        boolean response = db.create(name, temp.get());
+        if(response) return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.SUCCESS, "");
+        else return new EconomyResponse(0.0, 0, EconomyResponse.ResponseType.FAILURE, "Cannot create bank due to certain reasons.");
     }
 
     /**
