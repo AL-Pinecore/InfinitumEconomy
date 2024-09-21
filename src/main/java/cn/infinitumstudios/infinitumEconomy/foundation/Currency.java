@@ -49,6 +49,10 @@ public class Currency implements IJsonConvertible<Currency> {
         return String.format("%.2f %s", value, value <= 1 ? getName() : getPluralName());
     }
 
+    public String value(double value){
+        return value(value, true);
+    }
+
     @Override
     public JsonObject toJson() {
         JsonObject json = new JsonObject();

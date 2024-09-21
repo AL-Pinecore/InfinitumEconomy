@@ -4,6 +4,7 @@ import cn.infinitumstudios.infinitumEconomy.foundation.Currency;
 import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
 import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
 import com.google.gson.JsonObject;
+import org.bukkit.OfflinePlayer;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -64,6 +65,10 @@ public class Account implements IJsonConvertible<Account> {
         return wallet;
     }
 
+    public double getBaseBalance() {
+        return wallet.getBaseBalance();
+    }
+
     public void setBalance(double balance, Currency of) {
         this.wallet.setBalance(balance, of);
     }
@@ -86,6 +91,10 @@ public class Account implements IJsonConvertible<Account> {
 
     public boolean decrementBalance(double amount) {
         return this.decrementBalance(amount, CurrencyDatabase.DEFAULT_CURRENCY);
+    }
+
+    public boolean isPlayerAccountHolder(OfflinePlayer player){
+        return getAccountHolder().equals(player.getUniqueId());
     }
 
     @Override

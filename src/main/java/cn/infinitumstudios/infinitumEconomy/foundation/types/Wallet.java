@@ -13,6 +13,10 @@ public class Wallet implements IJsonConvertible<Wallet> {
         this.balance = balance;
     }
 
+    public double getBaseBalance() {
+        return balance;
+    }
+
     public void setBalance(double amount, Currency of) {
         this.balance = Math.max(0, Currency.convert(amount, of));
     }
