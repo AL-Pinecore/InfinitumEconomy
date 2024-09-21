@@ -71,11 +71,7 @@ public class InfinitumEconomy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(PEL, this);
 
         this.getCommand("econ").setExecutor(new EconCommand(this));
-        this.getCommand("pay").setExecutor(new EconCommand(this));
-        this.getCommand("money").setExecutor(new EconCommand(this));
-        this.getCommand("loan").setExecutor(new EconCommand(this));
-        this.getCommand("cheque").setExecutor(new EconCommand(this));
-        this.getCommand("baltop").setExecutor(new EconCommand(this));
+        this.getCommand("money").setExecutor(new MoneyCommand());
 
         AccountDatabase.init();
 
