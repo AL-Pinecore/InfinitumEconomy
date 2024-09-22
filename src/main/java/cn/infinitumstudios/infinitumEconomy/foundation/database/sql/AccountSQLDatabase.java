@@ -4,6 +4,8 @@ import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 
 import javax.annotation.Nullable;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class AccountSQLDatabase {
@@ -27,10 +29,12 @@ public class AccountSQLDatabase {
     /**
      * Creates/register an economy account into the database.
      * @param account an instance of the Account class.
-     * @return Returns true if created successfully. Returns false if the account is already existed in the database, or failed to create an account.
+     * @return {@link Status#FAILED}
+     *
      */
-    public boolean createAccount(Account account){
-        if (account == null || hasAccount(account.getAccountHolder())) return false;
+    public Status createAccount(Account account){
+        if (account == null) return Status.FAILED;
+        if (hasAccount(account.getAccountHolder())) return Status.EXISTED;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO account (Nickname, AccountUUID, AccountHolderUUID) VALUES (?,?,?)")){
             preparedStatement.setString(1,account.getNickname());
@@ -38,10 +42,9 @@ public class AccountSQLDatabase {
             preparedStatement.setString(3,account.getAccountHolder().toString());
             preparedStatement.executeUpdate();
         } catch (SQLException e){
-            return false;
+            return Status.FAILED;
         }
-
-        return true;
+        return Status.SUCCESS;
     }
 
     /**
@@ -50,17 +53,18 @@ public class AccountSQLDatabase {
      * @return Returns true if deleted successfully.
      */
 
-    public boolean deleteAccount (UUID playerUUID){
-        if (playerUUID == null) return false;
+    public Status deleteAccount (UUID playerUUID){
+        if (playerUUID == null) return Status.FAILED;
+        if (!hasAccount(playerUUID)) return Status.NOTFOUND;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM account WHERE AccountHolderUUID = ?")){
             preparedStatement.setString(1,playerUUID.toString());
             preparedStatement.executeUpdate();
         } catch (SQLException e){
-            return false;
+            return Status.FAILED;
         }
 
-        return true;
+        return Status.SUCCESS;
     }
 
     /**
@@ -89,22 +93,11 @@ public class AccountSQLDatabase {
         UUID accountUUID;
         String nickname;
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT Nickname FROM account WHERE AccountHolderUUID = ?")){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT Nickname, AccountUUID FROM account WHERE AccountHolderUUID = ?")){
             preparedStatement.setString(1, playerUUID.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 nickname = resultSet.getString("Nickname");
-            } else {
-                return null;
-            }
-        } catch (SQLException e){
-            return null;
-        }
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT AccountUUID FROM account WHERE AccountHolderUUID = ?")){
-            preparedStatement.setString(1, playerUUID.toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()){
                 accountUUID = UUID.fromString(resultSet.getString("AccountUUID"));
             } else {
                 return null;

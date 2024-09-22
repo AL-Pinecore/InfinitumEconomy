@@ -23,6 +23,7 @@ import java.util.function.UnaryOperator;
  * @apiNote Before you use any methods from this class, please *read the documentations* of each method in this class.
  */
 public class AccountDatabase extends Database<Account> {
+    
 
     public AccountDatabase() {
         super(Reference.ACCOUNT_DATABASE_NAME, Account.class, new File(Path.of(Reference.DATA_FILES_DIRECTORY.toString(), Reference.ACCOUNT_DATABASE_NAME + ".json").toUri()));
@@ -30,6 +31,7 @@ public class AccountDatabase extends Database<Account> {
         PlayerJoinEvent.EVENT.register(event -> {
             refreshPlayerEntries();
         });
+
     }
 
     /**

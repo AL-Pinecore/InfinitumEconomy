@@ -6,12 +6,17 @@ import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
 import cn.infinitumstudios.infinitumEconomy.foundation.Economy;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
+import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
+import cn.infinitumstudios.infinitumEconomy.foundation.database.sql.*;
+import cn.infinitumstudios.infinitumEconomy.foundation.types.Wallet;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.SQLException;
 
 public class InfinitumEconomy extends JavaPlugin {
 
@@ -37,16 +42,17 @@ public class InfinitumEconomy extends JavaPlugin {
         this.saveDefaultConfig();
         config = getConfig();
 
-//        try {
-//            AccountSQLDatabase accountSQLDatabase = new AccountSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
-//            BankSQLDatabase bankSQLDatabase = new BankSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
-//            ChequeSQLDatabase chequeSQLDatabase = new ChequeSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
-//            CurrencyDatabase currencyDatabase = new CurrencyDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
-//            AccountSQLDatabase accountSQLDatabase = new AccountSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
-//
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            AccountSQLDatabase accountSQLDatabase = new AccountSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+            BankSQLDatabase bankSQLDatabase = new BankSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+            ChequeSQLDatabase chequeSQLDatabase = new ChequeSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+            CurrencySQLDatabase currencyDatabase = new CurrencySQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+            LoanSQLDatabase loanSQLDatabase = new LoanSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+            WalletSQLDatabase walletSQLDatabase = new WalletSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+            VaultSQLDatabase vaultSQLDatabase = new VaultSQLDatabase(this.getDataFolder().getAbsolutePath() + "/economy.db");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         if (!getDataFolder().exists()){
             if (!getDataFolder().mkdirs()){

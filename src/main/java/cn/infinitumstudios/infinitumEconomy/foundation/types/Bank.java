@@ -16,10 +16,17 @@ public class Bank implements IJsonConvertible<Bank> {
         this(name, UUID.randomUUID(), owner);
     }
 
-    private Bank(String name, UUID bankUUID, UUID bankOwner) {
+    public Bank(String name, UUID bankUUID, UUID bankOwner) {
         this.bankUUID = bankUUID;
         this.bankOwner = bankOwner;
         this.name = name;
+    }
+
+    public Bank(String name, UUID bankUUID, UUID bankOwner, List<Vault> vaults) {
+        this.bankUUID = bankUUID;
+        this.bankOwner = bankOwner;
+        this.name = name;
+        this.vaults = vaults;
     }
 
     public String getName() {

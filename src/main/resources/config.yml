@@ -9,6 +9,11 @@ ConfigVersion: 1.0
 DataStorageType: JSON
 # In the future, we will support mySQL to storage the data of the plugin.
 
-EnableMultipleCurrency: true
-EnableBanksAndVaults: true
-EnableBuyCommand: true
+MultipleCurrency: true
+BanksAndVaults: true
+BuyCommand: true
+
+# The maximum numbers of bank that a player can create
+MaxBank: 3
+
+# Player
