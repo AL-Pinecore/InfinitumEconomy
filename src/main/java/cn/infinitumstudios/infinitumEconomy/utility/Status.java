@@ -1,7 +1,7 @@
-package cn.infinitumstudios.infinitumEconomy.foundation.database.sql;
+package cn.infinitumstudios.infinitumEconomy.utility;
 
 /**
- * @implNote This Enum shows the status of Infinitum Economy SQLite database operations.
+ * This Enum shows the status of Infinitum VaultAPI database operations.
  */
 
 public enum Status {

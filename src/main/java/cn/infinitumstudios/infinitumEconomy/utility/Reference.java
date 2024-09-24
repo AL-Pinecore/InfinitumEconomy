@@ -10,4 +10,5 @@ public class Reference {
 
     public static String ACCOUNT_DATABASE_NAME = "accounts";
     public static String CURRENCY_DATABASE_NAME = "currencies";
+    public static String BANK_DATABASE_NAME = "banks";
 }

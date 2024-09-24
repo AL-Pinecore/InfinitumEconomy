@@ -3,12 +3,11 @@ package cn.infinitumstudios.infinitumEconomy;
 import cn.infinitumstudios.infinitumEconomy.commands.EconCommand;
 import cn.infinitumstudios.infinitumEconomy.commands.MoneyCommand;
 import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
-import cn.infinitumstudios.infinitumEconomy.foundation.Economy;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
-import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
+import cn.infinitumstudios.infinitumEconomy.foundation.VaultAPI;
 import cn.infinitumstudios.infinitumEconomy.foundation.database.sql.*;
-import cn.infinitumstudios.infinitumEconomy.foundation.types.Wallet;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,10 +16,12 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class InfinitumEconomy extends JavaPlugin {
 
-    private static Economy econ = null;
+    private static VaultAPI econ = null;
+    private static Economy eco = new VaultAPI();
     private static net.milkbowl.vault.permission.Permission perms = null;
     private static net.milkbowl.vault.chat.Chat chat = null;
     protected FileConfiguration config;
@@ -29,11 +30,17 @@ public class InfinitumEconomy extends JavaPlugin {
 
     PlayerEventListener PEL;
 
+    private Economy provider;
+
     public InfinitumEconomy() {
         instance = this;
-        PlayerJoinEvent.EVENT.register(player -> {
-            setPlayerAccount(player);
-        });
+        PlayerJoinEvent.EVENT.register(this :: setPlayerAccount);
+    }
+
+    @Override
+    public void onLoad () {
+        getLogger().severe("Hooking into Vault...");
+        Bukkit.getServicesManager().register(Economy.class, eco, Objects.requireNonNull(this.getServer().getPluginManager().getPlugin("Vault")), ServicePriority.Highest);
     }
 
     @Override
@@ -64,8 +71,6 @@ public class InfinitumEconomy extends JavaPlugin {
 
         getLogger().info(getDataFolder().toString());
 
-        Bukkit.getServer().getServicesManager().register(Economy.class, new Economy(), this, ServicePriority.Highest);
-
         if (!setupEconomy()) {
             getLogger().severe("Disabled due to no Vault dependency found!");
             getServer().getPluginManager().disablePlugin(this);
@@ -86,7 +91,7 @@ public class InfinitumEconomy extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<VaultAPI> rsp = getServer().getServicesManager().getRegistration(VaultAPI.class);
         if (rsp == null) {
             return false;
         }
@@ -94,7 +99,7 @@ public class InfinitumEconomy extends JavaPlugin {
         return econ != null;
     }
 
-    public static Economy getEconomy() {
+    public static VaultAPI getEconomy() {
         return econ;
     }
 
@@ -115,4 +120,5 @@ public class InfinitumEconomy extends JavaPlugin {
         }
         return instance;
     }
+
 }

@@ -18,10 +18,10 @@ public class LoanSQLDatabase {
                 CREATE TABLE IF NOT EXISTS loan(
                     LoanUUID TEXT PRIMARY KEY,
                     Worth DOUBLE(18, 2),
-                    CurrencyUUID TEXT PRIMARY KEY,
-                    LenderAccountUUID TEXT PRIMARY KEY,
-                    BorrowerAccountUUID TEXT PRIMARY KEY,
-                    BankUUID TEXT PRIMARY KEY,
+                    CurrencyUUID TEXT NOT NULL,
+                    LenderAccountUUID TEXT NOT NULL,
+                    BorrowerAccountUUID TEXT NOT NULL,
+                    BankUUID TEXT NOT NULL,
                     InterestRate DECIMAL(5,4) DEFAULT 100
                 )
                 """);

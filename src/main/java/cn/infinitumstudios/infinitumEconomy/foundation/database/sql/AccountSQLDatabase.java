@@ -1,11 +1,10 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.database.sql;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
+import cn.infinitumstudios.infinitumEconomy.utility.Status;
 
 import javax.annotation.Nullable;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class AccountSQLDatabase {
@@ -20,7 +19,7 @@ public class AccountSQLDatabase {
                 CREATE TABLE IF NOT EXISTS account(
                     Nickname TEXT NOT NULL,
                     AccountUUID TEXT PRIMARY KEY,
-                    AccountHolderUUID TEXT PRIMARY KEY
+                    AccountHolderUUID TEXT NOT NULL
                 )
             """);
         }

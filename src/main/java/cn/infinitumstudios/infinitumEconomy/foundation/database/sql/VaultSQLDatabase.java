@@ -18,9 +18,9 @@ public class VaultSQLDatabase {
         statement.execute("""
                 CREATE TABLE IF NOT EXISTS vault(
                     VaultUUID TEXT PRIMARY KEY,
-                    OwnerUUID TEXT PRIMARY KEY,
-                    OwnedBankUUID TEXT PRIMARY KEY,
-                    CurrencyUUID TEXT PRIMARY KEY,
+                    OwnerUUID TEXT NOT NULL,
+                    OwnedBankUUID TEXT NOT NULL,
+                    CurrencyUUID TEXT NOT NULL,
                     Value DOUBLE(24, 2) DEFAULT 0
                 )
         """);
@@ -31,7 +31,7 @@ public class VaultSQLDatabase {
         List<Vault> vaults = new ArrayList<>();
         // TODO checks if vault existence
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT VaultUUID, OwnerUUID, CurrencyUUID, Value FROM bank WHERE BankUUID = ?")){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT VaultUUID, OwnerUUID, CurrencyUUID, Value FROM vault WHERE BankUUID = ?")){
             preparedStatement.setString(1, bankUUID.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -49,21 +49,23 @@ public class VaultSQLDatabase {
 
     }
 
-    // TODO single vault get method
-//    public List<Vault> getVault(UUID vaultUUID){
-//
-//        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT OwnedBankUUID, CurrencyUUID, Value FROM bank WHERE BankUUID = ?")){
-//            preparedStatement.setString(1, bankUUID.toString());
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//            if (resultSet.next()){
-//                bankName = resultSet.getString("BankName");
-//                bankOwnerUUID = resultSet.getString("OwnerAccountUUID");
-//            } else {
-//                return null;
-//            }
-//        } catch (SQLException e) {
-//            return null;
-//        }
-//    }
+    public Vault getVault(UUID vaultUUID){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT OwnerUUID, OwnedBankUUID, CurrencyUUID, Value FROM vault WHERE VaultUUID = ?")){
+            preparedStatement.setString(1, vaultUUID.toString());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                return new Vault(
+                        vaultUUID,
+                        UUID.fromString(resultSet.getString("OwnedBankUUID")),
+                        UUID.fromString(resultSet.getString("OwnerUUID")),
+                        resultSet.getString("CurrencyUUID"),
+                        resultSet.getDouble("Value"));
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+    }
 
 }

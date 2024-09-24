@@ -11,16 +11,28 @@ import java.util.UUID;
 
 public class Cheque implements IJsonConvertible<Cheque> {
     private double chequeWorth;
+
+    @Deprecated
     private String chequeOwner;
+
     private UUID chequeOwnerUUID;
     private UUID chequeUUID;
     private UUID chequeCurrencyUUID;
+    private UUID bankUUID;
 
     public Cheque(OfflinePlayer owner, double chequeWorth, UUID chequeCurrencyUUID){
+        this(owner.getUniqueId(), owner.getName(), UUID.randomUUID(), chequeWorth, chequeCurrencyUUID);
+    }
+
+    public Cheque(OfflinePlayer owner, UUID chequeUUID, double chequeWorth, UUID chequeCurrencyUUID){
+        this(owner.getUniqueId(), owner.getName(), chequeUUID, chequeWorth, chequeCurrencyUUID);
+    }
+
+    public Cheque(UUID ownerUUID, String ownerName, UUID chequeUUID, double chequeWorth, UUID chequeCurrencyUUID){
         this.chequeWorth = chequeWorth;
-        this.chequeOwner = owner.getName();
-        this.chequeOwnerUUID = owner.getUniqueId();
-        this.chequeUUID = UUID.randomUUID();
+        this.chequeOwner = ownerName;
+        this.chequeOwnerUUID = ownerUUID;
+        this.chequeUUID = chequeUUID;
         this.chequeCurrencyUUID = chequeCurrencyUUID;
     }
 
@@ -29,6 +41,7 @@ public class Cheque implements IJsonConvertible<Cheque> {
         return chequeWorth;
     }
 
+    @Deprecated
     public String getOwnerName() {
         return chequeOwner;
     }
