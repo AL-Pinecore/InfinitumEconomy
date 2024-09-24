@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public class Account implements IJsonConvertible<Account> {
 
-    /// VaultAPI account UUID
+    /// EconomyImplementer account UUID
     private UUID accountUUID;
 
-    /// VaultAPI account holder's UUID
+    /// EconomyImplementer account holder's UUID
     private UUID accountHolder;
 
     /// Nickname of the economy account

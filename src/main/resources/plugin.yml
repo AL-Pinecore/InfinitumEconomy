@@ -9,6 +9,6 @@ depend: [ Vault ]
 description: An economy plugin for Bukkit Minecraft server
 commands:
   econ:
-    description: VaultAPI operation.
+    description: EconomyImplementer operation.
   money:
-    description: VaultAPI Account Money operation.
+    description: EconomyImplementer Account Money operation.

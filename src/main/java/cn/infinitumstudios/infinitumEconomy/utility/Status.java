@@ -1,7 +1,7 @@
 package cn.infinitumstudios.infinitumEconomy.utility;
 
 /**
- * This Enum shows the status of Infinitum VaultAPI database operations.
+ * This Enum shows the status of Infinitum EconomyImplementer database operations.
  */
 
 public enum Status {
