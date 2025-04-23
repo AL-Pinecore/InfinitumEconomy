@@ -18,7 +18,6 @@ public class Cheque implements IJsonConvertible<Cheque> {
     private UUID chequeOwnerUUID;
     private UUID chequeUUID;
     private UUID chequeCurrencyUUID;
-    private UUID bankUUID;
 
     public Cheque(OfflinePlayer owner, double chequeWorth, UUID chequeCurrencyUUID){
         this(owner.getUniqueId(), owner.getName(), UUID.randomUUID(), chequeWorth, chequeCurrencyUUID);

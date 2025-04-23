@@ -108,9 +108,6 @@ public class AccountSQLDatabase {
         return new Account(accountUUID, playerUUID, nickname);
     }
 
-    /**
-     * Close the connection to the SQLite database
-     */
     protected boolean closeConnection() throws SQLException {
         if (connection != null && !connection.isClosed()){
             connection.close();
