@@ -4,7 +4,7 @@ package cn.infinitumstudios.infinitumEconomy.utility;
  * This Enum shows the status of Infinitum EconomyImplementer database operations.
  */
 
-public enum Status {
+public enum ResponseStatus {
 
     /**
      * Operation done successfully.

@@ -1,79 +1,36 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.types;
 
-import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
-import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-public class Bank implements IJsonConvertible<Bank> {
+public class Bank{
+    // Bank's name were unique in the server. Multiple banks with same name is not allowed.
     private String name;
-    private UUID bankUUID, bankOwner;
-    private List<Vault> vaults = new ArrayList<>();
+    private final UUID bankUUID, bankOwnerUUID;
 
     public Bank(String name, UUID owner) {
         this(name, UUID.randomUUID(), owner);
     }
 
-    public Bank(String name, UUID bankUUID, UUID bankOwner) {
+    public Bank(String name, UUID bankUUID, UUID bankOwnerUUID) {
         this.bankUUID = bankUUID;
-        this.bankOwner = bankOwner;
+        this.bankOwnerUUID = bankOwnerUUID;
         this.name = name;
-    }
-
-    public Bank(String name, UUID bankUUID, UUID bankOwner, List<Vault> vaults) {
-        this.bankUUID = bankUUID;
-        this.bankOwner = bankOwner;
-        this.name = name;
-        this.vaults = vaults;
     }
 
     public String getName() {
         return name;
     }
 
+    // Bank's name were unique in the server. Multiple banks with same name is not allowed.
     public void setName(String name) {
         this.name = name;
     }
 
-    public UUID getBankOwner() {
-        return bankOwner;
+    public UUID getBankOwnerID () {
+        return bankOwnerUUID;
     }
 
-    public void setBankOwner(UUID owner) {
-        this.bankOwner = owner;
-    }
-
-    public List<Vault> getVaults() {
-        return vaults;
-    }
-
-    public void setVaults(List<Vault> vaults) {
-        this.vaults = vaults;
-    }
-
-    public UUID getBankUUID() {
+    public UUID getBankID () {
         return bankUUID;
-    }
-
-    public void setBankUUID(UUID uuid) {
-        this.bankUUID = uuid;
-    }
-
-    @Override
-    public JsonObject toJson() {
-        JsonObject json = new JsonObject();
-        json.addProperty("name", name);
-        json.addProperty("bankUUID", bankUUID.toString());
-        json.addProperty("bankOwner", bankOwner.toString());
-        return json;
-    }
-
-    @Override
-    public void fromJson(JsonObject object) {
-        this.name = object.get("name").getAsString();
-        this.bankUUID = UUID.fromString(object.get("bankUUID").getAsString());
-        this.bankOwner = UUID.fromString(object.get("bankOwner").getAsString());
     }
 }

@@ -1,6 +1,8 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.database.sql;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Vault;
+import cn.infinitumstudios.infinitumEconomy.utility.ResponseStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,28 +20,37 @@ public class VaultSQLDatabase {
         statement.execute("""
                 CREATE TABLE IF NOT EXISTS vault(
                     VaultUUID TEXT PRIMARY KEY,
-                    OwnerUUID TEXT NOT NULL,
-                    OwnedBankUUID TEXT NOT NULL,
+                    BankUUID TEXT NOT NULL,
                     CurrencyUUID TEXT NOT NULL,
                     Value DOUBLE(24, 2) DEFAULT 0
                 )
         """);
     }
 
-    public List<Vault> getVaults(UUID bankUUID){
+    public ResponseStatus createVault (Vault vault){
+        return null;
+    }
 
-        List<Vault> vaults = new ArrayList<>();
+    public ResponseStatus deleteVault (UUID vaultUUID){
+        return null;
+    }
+
+    public boolean hasVault (UUID vaultUUID){
+        return false;
+    }
+
+    public ArrayList<Vault> getVaults (UUID bankUUID){
+        ArrayList<Vault> vaults = new ArrayList<>();
         // TODO checks if vault existence
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT VaultUUID, OwnerUUID, CurrencyUUID, Value FROM vault WHERE BankUUID = ?")){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT VaultUUID, CurrencyUUID, Value FROM vault WHERE BankUUID = ?")){
             preparedStatement.setString(1, bankUUID.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
                 vaults.add(new Vault(
                         UUID.fromString(resultSet.getString("VaultUUID")),
                         bankUUID,
-                        UUID.fromString(resultSet.getString("OwnerUUID")),
-                        resultSet.getString("CurrencyUUID"),
+                        UUID.fromString(resultSet.getString("CurrencyUUID")),
                         resultSet.getDouble("Value")));
             }
             return vaults;
@@ -49,16 +60,16 @@ public class VaultSQLDatabase {
 
     }
 
-    public Vault getVault(UUID vaultUUID){
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT OwnerUUID, OwnedBankUUID, CurrencyUUID, Value FROM vault WHERE VaultUUID = ?")){
+    @Nullable
+    public Vault getVault (UUID vaultUUID){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT BankUUID, CurrencyUUID, Value FROM vault WHERE VaultUUID = ?")){
             preparedStatement.setString(1, vaultUUID.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
                 return new Vault(
                         vaultUUID,
-                        UUID.fromString(resultSet.getString("OwnedBankUUID")),
-                        UUID.fromString(resultSet.getString("OwnerUUID")),
-                        resultSet.getString("CurrencyUUID"),
+                        UUID.fromString(resultSet.getString("BankUUID")),
+                        UUID.fromString(resultSet.getString("CurrencyUUID")),
                         resultSet.getDouble("Value"));
             } else {
                 return null;
@@ -68,4 +79,7 @@ public class VaultSQLDatabase {
         }
     }
 
+    public ResponseStatus updateVault (Vault vault){
+        return null;
+    }
 }

@@ -11,25 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ChequeCommand extends InfinitumSubcommand{
-    // TODO finish the cheque commands
-    public ChequeCommand(InfinitumCommand command) {
-        super(command);
-    }
-    // Create a Cheque using a paper
+public class ChequeCommand{
 
-    @Override
-    public void reloadCommand(InfinitumCommand command) {
-
-    }
-
-    @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
-        return super.execute(sender, args);
-    }
-
-    @Override
-    public @Nullable List<String> tabComplete(@NotNull CommandSender sender, @NotNull String[] args) {
-        return super.tabComplete(sender, args);
-    }
 }

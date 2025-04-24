@@ -1,16 +1,15 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.database.sql;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Bank;
-import cn.infinitumstudios.infinitumEconomy.foundation.types.Vault;
-import cn.infinitumstudios.infinitumEconomy.utility.Status;
+import cn.infinitumstudios.infinitumEconomy.utility.ResponseStatus;
 import org.bukkit.Bukkit;
 
 import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class BankSQLDatabase {
     private final Connection connection;
@@ -32,70 +31,101 @@ public class BankSQLDatabase {
     /**
      * Creates/register a bank into the database.
      * @param bank Instance of class {@link Bank}.
-     * @return {@link Status#SUCCESS}, {@link Status#EXISTED}, {@link Status#FAILED}
+     * @return {@link ResponseStatus#SUCCESS}, {@link ResponseStatus#EXISTED}, {@link ResponseStatus#FAILED}
      */
-    public Status createBank (Bank bank){
-        if (bank == null) return Status.FAILED;
-        if (hasBank(bank.getBankUUID())) return Status.EXISTED;
+    public ResponseStatus createBank (Bank bank){
+        if (bank == null) return ResponseStatus.FAILED;
+        if (hasBank(bank.getBankID())) return ResponseStatus.EXISTED;
+        if (hasBank(bank.getName())) return ResponseStatus.EXISTED;
+
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO bank (BankName, BankUUID, OwnerAccountUUID) VALUES (?,?,?)")){
             preparedStatement.setString(1, bank.getName());
-            preparedStatement.setString(2, bank.getBankUUID().toString());
-            preparedStatement.setString(3, Objects.requireNonNull(this.getBankOwnerAccount(bank.getBankOwner())).toString());
-
+            preparedStatement.setString(2, bank.getBankID().toString());
+            preparedStatement.setString(3, Objects.requireNonNull(bank.getBankOwnerID().toString()));
         } catch (SQLException e){
-            return Status.FAILED;
+            return ResponseStatus.FAILED;
         }
-        return Status.SUCCESS;
+        return ResponseStatus.SUCCESS;
     }
 
     /**
      * Delete a bank from the database.
      * @param bankUUID the bank's UUID.
-     * @return {@link Status#SUCCESS}, {@link Status#NOTFOUND}, {@link Status#FAILED}
+     * @return {@link ResponseStatus#SUCCESS}, {@link ResponseStatus#NOTFOUND}, {@link ResponseStatus#FAILED}
      */
-    public Status deleteBank (UUID bankUUID){
-        if (bankUUID == null) return Status.FAILED;
-        if (!hasBank(bankUUID)) return Status.NOTFOUND;
+    public ResponseStatus deleteBank (UUID bankUUID){
+        if (bankUUID == null) return ResponseStatus.FAILED;
+        if (!hasBank(bankUUID)) return ResponseStatus.NOTFOUND;
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM bank WHERE BankUUID = ?")){
             preparedStatement.setString(1, bankUUID.toString());
             preparedStatement.executeUpdate();
         } catch (SQLException e){
-            return Status.FAILED;
+            return ResponseStatus.FAILED;
         }
-        return Status.SUCCESS;
+        return ResponseStatus.SUCCESS;
     }
 
     /**
-     * Get a list of UUID of banks from the owner UUID's account.
-     * @param ownerUUID the bank owner's game UUID.
-     * @return An array of UUIDs
+     * Is the bank exists in the database.
+     * @param bankUUID the bank's UUID.
+     * @return true - the bank is founded, false - the bank does not exist in the database.
      */
-    public @Nullable UUID[] getBankUUIDs (UUID ownerUUID){
-        List<UUID> foundedBankUUIDs = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT BankUUID FROM bank WHERE OwnerAccountUUID = ?")){
+    public boolean hasBank (UUID bankUUID){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM bank WHERE BankUUID = ?")){
+            preparedStatement.setString(1, bankUUID.toString());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e){
+            Logger logger = Bukkit.getLogger();
+            logger.warning(e.toString());
+            return false;
+        }
+    }
+
+    public boolean hasBank (String bankName){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM bank WHERE BankName = ?")){
+            preparedStatement.setString(1, bankName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        } catch (SQLException e){
+            Logger logger = Bukkit.getLogger();
+            logger.warning(e.toString());
+            return false;
+        }
+    }
+
+    /**
+     * Get a list of banks from the owner UUID's account.
+     * @param ownerUUID the bank owner's game UUID.
+     * @return An array list of instance {@link Bank}
+     */
+    public ArrayList<Bank> getBanks (UUID ownerUUID){
+        ArrayList<Bank> foundedBanks = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT BankName, BankUUID FROM bank WHERE OwnerAccountUUID = ?")){
             preparedStatement.setString(1, ownerUUID.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
-                foundedBankUUIDs.add(UUID.fromString(resultSet.getString("BankUUID")));
+                foundedBanks.add(new Bank(
+                        resultSet.getString("BankName"),
+                        UUID.fromString(resultSet.getString("BankUUID")),
+                        ownerUUID
+                ));
             }
-            UUID[] uuids = new UUID[foundedBankUUIDs.size()];
-            for (int i = 0 ; i < foundedBankUUIDs.size() ; i++){
-                uuids[i] = foundedBankUUIDs.get(i);
-            }
-            return uuids;
+            return foundedBanks;
         } catch (SQLException e){
             return null;
         }
     }
 
     /**
-     * Get a list of UUID of banks from the owner UUID's account.
+     * Get a bank from the database based on the bank UUID
      * @param bankUUID the bank's UUID.
      * @return An instance of class {@link Bank}, null if not found anything
      */
-    public @Nullable Bank getBank (UUID bankUUID){
+    @Nullable
+    public Bank getBank (UUID bankUUID){
+        if (bankUUID == null) return null;
         String bankOwnerUUID, bankName;
-        List<Vault> vaultList = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT BankName, OwnerAccountUUID FROM bank WHERE BankUUID = ?")){
             preparedStatement.setString(1, bankUUID.toString());
@@ -110,36 +140,73 @@ public class BankSQLDatabase {
             return null;
         }
 
-        return new Bank(bankName, bankUUID, UUID.fromString(bankOwnerUUID), vaultSQLDatabase.getVaults(bankUUID));
-
+        return new Bank(bankName, bankUUID, UUID.fromString(bankOwnerUUID));
     }
 
-    /**
-     * Is the bank exists in the database.
-     * @param bankUUID the bank's UUID.
-     * @return true - the bank is founded, false - the bank does not exist in the database.
-     */
-    public boolean hasBank (UUID bankUUID){
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM bank WHERE BankUUID = ?")){
-            preparedStatement.setString(1, bankUUID.toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e){
-            return false;
-        }
-    }
-
-    private UUID getBankOwnerAccount (UUID bankOwnerUUID){
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT AccountUUID FROM account WHERE AccountHolderUUID = ?")){
-            preparedStatement.setString(1, bankOwnerUUID.toString());
+    @Nullable
+    public Bank getBank (String bankName){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT BankUUID, OwnerAccountUUID FROM bank WHERE BankName = ?")){
+            preparedStatement.setString(1, bankName);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                return UUID.fromString(resultSet.getString("AccountUUID"));
+                return new Bank(bankName,
+                        UUID.fromString(resultSet.getString("BankUUID")),
+                        UUID.fromString(resultSet.getString("OwnerAccountUUID")));
             } else {
                 return null;
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             return null;
+        }
+    }
+
+    public ArrayList<Bank> getAllBanks(){
+        ArrayList<Bank> banks = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM bank")){
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                banks.add(new Bank(
+                        rs.getString("BankName"),
+                        UUID.fromString(rs.getString("BankUUID")),
+                        UUID.fromString(rs.getString("OwnerAccountUUID"))
+                ));
+            }
+        } catch (Exception e){
+            Logger logger = Bukkit.getLogger();
+            logger.warning(e.toString());
+            return null;
+        }
+        return banks;
+    }
+
+    public ResponseStatus updateBank(Bank bank){
+        if (bank == null) return ResponseStatus.FAILED;
+        if (!hasBank(bank.getBankID())) return ResponseStatus.NOTFOUND;
+
+        // No repeated bank name
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM bank WHERE BankName = ? AND NOT BankUUID = ?")){
+            preparedStatement.setString(1, bank.getName());
+            preparedStatement.setString(2, bank.getBankID().toString());
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()){
+                return ResponseStatus.EXISTED;
+            }
+        } catch (Exception e){
+            Logger logger = Bukkit.getLogger();
+            logger.warning(e.toString());
+            return ResponseStatus.FAILED;
+        }
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE bank SET BankName = ?, OwnerAccountUUID = ? WHERE BankUUID = ?")){
+            preparedStatement.setString(1, bank.getName());
+            preparedStatement.setString(2, bank.getBankOwnerID().toString());
+            preparedStatement.setString(3, bank.getBankID().toString());
+            preparedStatement.executeUpdate();
+            return ResponseStatus.SUCCESS;
+        } catch (Exception e){
+            Logger logger = Bukkit.getLogger();
+            logger.warning(e.toString());
+            return ResponseStatus.FAILED;
         }
     }
 }

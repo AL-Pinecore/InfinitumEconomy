@@ -1,35 +1,26 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.types;
 
-import cn.infinitumstudios.infinitumEconomy.foundation.Currency;
-import cn.infinitumstudios.infinitumEconomy.foundation.database.CurrencyDatabase;
-import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IJsonConvertible;
-import com.google.gson.JsonObject;
 import org.bukkit.OfflinePlayer;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class Cheque implements IJsonConvertible<Cheque> {
-    private double chequeWorth;
+public class Cheque{
 
-    @Deprecated
-    private String chequeOwner;
+    // Cheque's value, uuid, owner's uuid, currency's uuid cannot be changed after created.
+    private final double value;
 
-    private UUID chequeOwnerUUID;
-    private UUID chequeUUID;
-    private UUID chequeCurrencyUUID;
+    private final UUID chequeOwnerUUID, chequeUUID, chequeCurrencyUUID;
 
-    public Cheque(OfflinePlayer owner, double chequeWorth, UUID chequeCurrencyUUID){
-        this(owner.getUniqueId(), owner.getName(), UUID.randomUUID(), chequeWorth, chequeCurrencyUUID);
+    public Cheque(OfflinePlayer owner, double value, UUID chequeCurrencyUUID){
+        this(owner.getUniqueId(), UUID.randomUUID(), value, chequeCurrencyUUID);
     }
 
-    public Cheque(OfflinePlayer owner, UUID chequeUUID, double chequeWorth, UUID chequeCurrencyUUID){
-        this(owner.getUniqueId(), owner.getName(), chequeUUID, chequeWorth, chequeCurrencyUUID);
+    public Cheque(OfflinePlayer owner, UUID chequeUUID, double value, UUID chequeCurrencyUUID){
+        this(owner.getUniqueId(), chequeUUID, value, chequeCurrencyUUID);
     }
 
-    public Cheque(UUID ownerUUID, String ownerName, UUID chequeUUID, double chequeWorth, UUID chequeCurrencyUUID){
-        this.chequeWorth = chequeWorth;
-        this.chequeOwner = ownerName;
+    public Cheque(UUID ownerUUID, UUID chequeUUID, double value, UUID chequeCurrencyUUID){
+        this.value = value;
         this.chequeOwnerUUID = ownerUUID;
         this.chequeUUID = chequeUUID;
         this.chequeCurrencyUUID = chequeCurrencyUUID;
@@ -37,49 +28,18 @@ public class Cheque implements IJsonConvertible<Cheque> {
 
     public double getWorth() {
         // Converted into Universal currency
-        return chequeWorth;
+        return value;
     }
 
-    @Deprecated
-    public String getOwnerName() {
-        return chequeOwner;
-    }
-
-    public UUID getUUID() {
+    public UUID getChequeID () {
         return chequeUUID;
     }
 
-    public UUID getOwnerUUID() {
+    public UUID getOwnerID () {
         return chequeOwnerUUID;
     }
 
-    public UUID getCurrencyUUID() {
+    public UUID getCurrencyID () {
         return chequeCurrencyUUID;
-    }
-
-    public @Nullable Currency getCurrency(){
-        CurrencyDatabase db = new CurrencyDatabase();
-        db.load();
-        return db.read(currency -> currency.getCurrencyID().equals(chequeCurrencyUUID)).get();
-    }
-
-    @Override
-    public JsonObject toJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("chequeWorth", chequeWorth);
-        jsonObject.addProperty("chequeOwner", chequeOwner);
-        jsonObject.addProperty("chequeOwnerUUID", chequeOwnerUUID.toString());
-        jsonObject.addProperty("chequeUUID", chequeUUID.toString());
-        jsonObject.addProperty("chequeCurrency", chequeCurrencyUUID.toString());
-        return jsonObject;
-    }
-
-    @Override
-    public void fromJson(JsonObject object) {
-        this.chequeWorth = object.get("chequeWorth").getAsDouble();
-        this.chequeOwner = object.get("chequeOwner").getAsString();
-        this.chequeOwnerUUID = UUID.fromString(object.get("chequeOwnerUUID").getAsString());
-        this.chequeUUID = UUID.fromString(object.get("chequeUUID").getAsString());
-        this.chequeCurrencyUUID = UUID.fromString(object.get("chequeCurrency").getAsString());
     }
 }
