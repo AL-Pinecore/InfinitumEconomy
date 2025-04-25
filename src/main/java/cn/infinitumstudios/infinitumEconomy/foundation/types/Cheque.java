@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class Cheque{
 
-    // Cheque's value, uuid, owner's uuid, currency's uuid cannot be changed after created.
+    // Cheque's value cannot be changed after created.
     private final double value;
 
     private final UUID chequeOwnerUUID, chequeUUID, chequeCurrencyUUID;

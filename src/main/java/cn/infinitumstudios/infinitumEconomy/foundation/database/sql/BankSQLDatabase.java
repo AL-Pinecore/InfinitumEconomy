@@ -34,7 +34,6 @@ public class BankSQLDatabase {
      * @return {@link ResponseStatus#SUCCESS}, {@link ResponseStatus#EXISTED}, {@link ResponseStatus#FAILED}
      */
     public ResponseStatus createBank (Bank bank){
-        if (bank == null) return ResponseStatus.FAILED;
         if (hasBank(bank.getBankID())) return ResponseStatus.EXISTED;
         if (hasBank(bank.getName())) return ResponseStatus.EXISTED;
 
@@ -54,7 +53,6 @@ public class BankSQLDatabase {
      * @return {@link ResponseStatus#SUCCESS}, {@link ResponseStatus#NOTFOUND}, {@link ResponseStatus#FAILED}
      */
     public ResponseStatus deleteBank (UUID bankUUID){
-        if (bankUUID == null) return ResponseStatus.FAILED;
         if (!hasBank(bankUUID)) return ResponseStatus.NOTFOUND;
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM bank WHERE BankUUID = ?")){
             preparedStatement.setString(1, bankUUID.toString());
@@ -124,7 +122,6 @@ public class BankSQLDatabase {
      */
     @Nullable
     public Bank getBank (UUID bankUUID){
-        if (bankUUID == null) return null;
         String bankOwnerUUID, bankName;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT BankName, OwnerAccountUUID FROM bank WHERE BankUUID = ?")){
@@ -180,7 +177,6 @@ public class BankSQLDatabase {
     }
 
     public ResponseStatus updateBank(Bank bank){
-        if (bank == null) return ResponseStatus.FAILED;
         if (!hasBank(bank.getBankID())) return ResponseStatus.NOTFOUND;
 
         // No repeated bank name

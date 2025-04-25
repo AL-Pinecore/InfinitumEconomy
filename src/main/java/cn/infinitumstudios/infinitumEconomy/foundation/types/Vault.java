@@ -1,7 +1,5 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.types;
 
-import org.bukkit.OfflinePlayer;
-
 import java.util.UUID;
 
 public class Vault{
@@ -24,7 +22,7 @@ public class Vault{
         return vaultUUID;
     }
 
-    public UUID getOwnedBank(){
+    public UUID getOwnedBankID (){
         return bankUUID;
     }
 

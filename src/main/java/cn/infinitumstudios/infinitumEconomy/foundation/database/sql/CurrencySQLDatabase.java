@@ -28,7 +28,6 @@ public class CurrencySQLDatabase {
     }
 
     public ResponseStatus createCurrency(Currency currency){
-        if (currency == null) return ResponseStatus.FAILED;
         if (hasCurrency(currency.getCurrencyID())) return ResponseStatus.EXISTED;
         if (hasCurrency(currency.getName())) return ResponseStatus.EXISTED;
 
@@ -49,7 +48,6 @@ public class CurrencySQLDatabase {
 
     @Deprecated
     public ResponseStatus deleteCurrency(UUID currencyUUID){
-        if (currencyUUID == null) return ResponseStatus.FAILED;
         if (!hasCurrency(currencyUUID)) return ResponseStatus.NOTFOUND;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM currency WHERE CurrencyUUID = ?")){
@@ -90,7 +88,6 @@ public class CurrencySQLDatabase {
 
     @Nullable
     public Currency getCurrency(UUID currencyUUID){
-        if (currencyUUID == null) return null;
         if (!hasCurrency(currencyUUID)) return null;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT CurrencyName, CurrencySymbol, UniversalWorth FROM currency WHERE CurrencyUUID = ?")){
@@ -111,8 +108,6 @@ public class CurrencySQLDatabase {
 
     @Nullable
     public Currency getCurrency(String currencyName){
-        if (!hasCurrency(currencyName)) return null;
-
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT CurrencyUUID, CurrencySymbol, UniversalWorth FROM currency WHERE CurrencyName = ?")){
             preparedStatement.setString(1, currencyName);
             ResultSet rs = preparedStatement.executeQuery();
@@ -152,7 +147,6 @@ public class CurrencySQLDatabase {
     }
 
     public ResponseStatus updateCurrency(Currency currency){
-        if (currency == null) return ResponseStatus.FAILED;
         if (!hasCurrency(currency.getCurrencyID())) return ResponseStatus.NOTFOUND;
 
         // No repeated currency name
@@ -167,11 +161,10 @@ public class CurrencySQLDatabase {
             return ResponseStatus.FAILED;
         }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE currency SET CurrencyName = ?, CurrencySymbol = ?, UniversalWorth = ? WHERE CurrencyUUID = ?")){
-            preparedStatement.setString(1, currency.getName());
-            preparedStatement.setString(2, Character.toString(currency.getSymbol()));
-            preparedStatement.setDouble(3, currency.getCurrencyWorth());
-            preparedStatement.setString(4, currency.getCurrencyID().toString());
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE currency SET CurrencySymbol = ?, UniversalWorth = ? WHERE CurrencyUUID = ?")){
+            preparedStatement.setString(1, Character.toString(currency.getSymbol()));
+            preparedStatement.setDouble(2, currency.getCurrencyWorth());
+            preparedStatement.setString(3, currency.getCurrencyID().toString());
             preparedStatement.executeUpdate();
         } catch (Exception e){
             Logger logger = Bukkit.getLogger();

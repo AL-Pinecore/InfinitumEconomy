@@ -33,7 +33,6 @@ public class AccountSQLDatabase {
      *
      */
     public ResponseStatus createAccount(Account account){
-        if (account == null) return ResponseStatus.FAILED;
         if (hasAccount(account.getAccountID())) return ResponseStatus.EXISTED;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO account (Nickname, AccountUUID, Credit) VALUES (?,?,?)")){
@@ -56,7 +55,6 @@ public class AccountSQLDatabase {
      */
     @Deprecated
     public ResponseStatus deleteAccount (UUID playerUUID){
-        if (playerUUID == null) return ResponseStatus.FAILED;
         if (!hasAccount(playerUUID)) return ResponseStatus.NOTFOUND;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM account WHERE AccountUUID = ?")){
@@ -95,8 +93,6 @@ public class AccountSQLDatabase {
      */
     @Nullable
     public Account getAccount(UUID playerUUID){
-        if (playerUUID == null) return null;
-
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT Nickname, Credit FROM account WHERE AccountUUID = ?")){
             preparedStatement.setString(1, playerUUID.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -117,9 +113,6 @@ public class AccountSQLDatabase {
     }
 
     public ResponseStatus updateAccount(Account account){
-        if (account == null){
-            return ResponseStatus.FAILED;
-        }
         if (!hasAccount(account.getAccountID())){
             return ResponseStatus.NOTFOUND;
         }

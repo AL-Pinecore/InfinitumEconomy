@@ -1,6 +1,5 @@
 package cn.infinitumstudios.infinitumEconomy.foundation.database.sql;
 
-import cn.infinitumstudios.infinitumEconomy.foundation.types.Account;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.Loan;
 import cn.infinitumstudios.infinitumEconomy.foundation.types.LoanType;
 import cn.infinitumstudios.infinitumEconomy.utility.ResponseStatus;
@@ -61,7 +60,6 @@ public class LoanSQLDatabase {
     }
 
     public ResponseStatus deleteLoan (UUID loanUUID){
-        if (loanUUID == null) return ResponseStatus.FAILED;
         if (!hasLoan(loanUUID)) return ResponseStatus.NOTFOUND;
 
         try (PreparedStatement ps = connection.prepareStatement("DELETE FROM loan WHERE LoanUUID = ?")){
@@ -90,7 +88,6 @@ public class LoanSQLDatabase {
 
     @Nullable
     public Loan getLoan (UUID loanUUID){
-        if (loanUUID == null) return null;
         if (!hasLoan(loanUUID)) return null;
 
         try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM loan WHERE LoanUUID = ?")){
@@ -170,18 +167,11 @@ public class LoanSQLDatabase {
     }
 
     public ResponseStatus updateLoan (Loan loan){
-        if (loan == null) return ResponseStatus.FAILED;
         if (!hasLoan(loan.getLoanID())) return ResponseStatus.NOTFOUND;
 
-        try (PreparedStatement ps = connection.prepareStatement("UPDATE loan SET Worth = ?, CurrencyUUID = ?, LoanerAccountUUID = ?, LoanerType = ?, BorrowerAccountUUID = ?, InterestRate = ?, DayLimit = ? WHERE LoanUUID = ?")){
-            ps.setDouble(1, loan.getValue());
-            ps.setString(2, loan.getCurrencyID().toString());
-            ps.setString(3, loan.getLoanerID().toString());
-            ps.setInt(4, loan.getLoanType() == LoanType.PLAYER ? 0 : 1);
-            ps.setString(5, loan.getBorrowerID().toString());
-            ps.setDouble(6, loan.getInterestRate());
-            ps.setInt(7, loan.getDayLimit());
-            ps.setString(8, loan.getLoanID().toString());
+        try (PreparedStatement ps = connection.prepareStatement("UPDATE loan SET DayLimit = ? WHERE LoanUUID = ?")){
+            ps.setInt(1, loan.getDayLimit());
+            ps.setString(2, loan.getLoanID().toString());
             ps.executeUpdate();
             return ResponseStatus.SUCCESS;
         } catch (Exception e){

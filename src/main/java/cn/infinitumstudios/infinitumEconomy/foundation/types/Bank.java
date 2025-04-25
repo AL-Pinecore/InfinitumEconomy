@@ -5,7 +5,8 @@ import java.util.UUID;
 public class Bank{
     // Bank's name were unique in the server. Multiple banks with same name is not allowed.
     private String name;
-    private final UUID bankUUID, bankOwnerUUID;
+    private final UUID bankUUID;
+    private UUID bankOwnerUUID;
 
     public Bank(String name, UUID owner) {
         this(name, UUID.randomUUID(), owner);
@@ -28,6 +29,10 @@ public class Bank{
 
     public UUID getBankOwnerID () {
         return bankOwnerUUID;
+    }
+
+    public void setBankOwnerUUID (UUID bankOwnerUUID) {
+        this.bankOwnerUUID = bankOwnerUUID;
     }
 
     public UUID getBankID () {

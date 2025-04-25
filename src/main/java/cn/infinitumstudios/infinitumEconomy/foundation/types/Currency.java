@@ -6,9 +6,9 @@ public class Currency {
     private final UUID currencyID;
 
     // Currency's name were unique in the server. Multiple currency with same name is not allowed.
-    // Currency's name, UUID, Symbol cannot be changed once after created.
+    // Currency's name cannot be changed once after created.
     private final String name;
-    private final char symbol;
+    private char symbol;
     private double currencyWorth;
 
     public Currency(String name, char symbol, double currencyWorth) {
@@ -32,6 +32,10 @@ public class Currency {
 
     public char getSymbol() {
         return symbol;
+    }
+
+    public void setSymbol(char symbol) {
+        this.symbol = symbol;
     }
 
     public double getCurrencyWorth() {

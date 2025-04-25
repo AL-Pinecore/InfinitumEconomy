@@ -33,7 +33,6 @@ public class ChequeSQLDatabase {
      * @return {@link ResponseStatus#FAILED}
      */
     public ResponseStatus createCheque(Cheque cheque){
-        if (cheque == null) return ResponseStatus.FAILED;
         if (hasCheque(cheque.getChequeID())) return ResponseStatus.EXISTED;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO cheque (ChequeUUID,  Worth, CurrencyUUID, OwnerAccountUUID) VALUES (?,?,?,?)")){
@@ -51,7 +50,6 @@ public class ChequeSQLDatabase {
     }
 
     public ResponseStatus deleteCheque (UUID chequeUUID){
-        if (chequeUUID == null) return ResponseStatus.FAILED;
         if (!hasCheque(chequeUUID)) return ResponseStatus.NOTFOUND;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM cheque WHERE ChequeUUID = ?")){
@@ -99,8 +97,6 @@ public class ChequeSQLDatabase {
 
     @Nullable
     public Cheque getCheque(UUID chequeUUID){
-        if (chequeUUID == null) return null;
-
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT Worth, CurrencyUUID, OwnerAccountUUID FROM cheque WHERE ChequeUUID = ?")){
             preparedStatement.setString(1, chequeUUID.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -119,7 +115,6 @@ public class ChequeSQLDatabase {
 
     @Deprecated
     public ResponseStatus updateCheque(Cheque cheque){
-        if (cheque == null) return ResponseStatus.FAILED;
         if (!hasCheque(cheque.getChequeID())) return ResponseStatus.NOTFOUND;
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE cheque SET Worth = ?, CurrencyUUID = ?, OwnerAccountUUID = ? WHERE ChequeUUID = ?")){
