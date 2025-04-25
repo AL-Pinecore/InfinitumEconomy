@@ -4,6 +4,7 @@ import cn.infinitumstudios.infinitumEconomy.event.PlayerJoinEvent;
 import cn.infinitumstudios.infinitumEconomy.event.listeners.PlayerEventListener;
 
 import cn.infinitumstudios.infinitumEconomy.foundation.EconomyImplementer;
+import cn.infinitumstudios.infinitumEconomy.foundation.interfaces.IDatabaseManager;
 import cn.infinitumstudios.infinitumEconomy.utility.VaultHook;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
@@ -98,7 +99,7 @@ public class InfinitumEconomy extends JavaPlugin {
         return eco;
     }
 
-    public static SQLiteDatabaseManager getSqliteDatabaseManager(){
+    public static IDatabaseManager getSqliteDatabaseManager(){
         if (sqliteDatabase == null){
             loadDatabase();
         }

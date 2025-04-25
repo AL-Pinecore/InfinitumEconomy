@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class ChequeSQLDatabase {
 
-    // TODO Cheque SQL
     private final Connection connection;
 
     public ChequeSQLDatabase(String path) throws SQLException {

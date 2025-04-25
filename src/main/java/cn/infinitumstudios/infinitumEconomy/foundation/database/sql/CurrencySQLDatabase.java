@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 public class CurrencySQLDatabase {
 
-    // TODO Currency
     private final Connection connection;
 
     public CurrencySQLDatabase(String path) throws SQLException {

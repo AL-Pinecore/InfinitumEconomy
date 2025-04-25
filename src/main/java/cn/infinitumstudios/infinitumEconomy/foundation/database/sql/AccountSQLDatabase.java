@@ -13,7 +13,6 @@ public class AccountSQLDatabase {
 
     private final Connection connection;
 
-    // TODO (SQLite) supports the Balance in Account class
     public AccountSQLDatabase(String path) throws SQLException {
         this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         try (Statement statement = connection.createStatement()) {
@@ -125,7 +124,7 @@ public class AccountSQLDatabase {
             return ResponseStatus.NOTFOUND;
         }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE account SET Nickname = ?, Credit = ? WHERE AccounrUUID = ?")){
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE account SET Nickname = ?, Credit = ? WHERE AccountUUID = ?")){
             preparedStatement.setString(1, account.getNickname());
             preparedStatement.setInt(2, account.getCredit());
             preparedStatement.setString(3, account.getAccountID().toString());

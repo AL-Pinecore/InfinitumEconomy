@@ -47,6 +47,17 @@ public class Loan{
         this.dayLimit = dayLimit;
     }
 
+    public Loan(UUID loanUUID, UUID loanerUUID, UUID borrowerUUID, LoanType loanType, double value, double interestRate, UUID currency, int dayLimit){
+        this.loanUUID = loanUUID;
+        this.loanerUUID = loanerUUID;
+        this.borrowerUUID = borrowerUUID;
+        this.type = loanType;
+        this.value = value;
+        this.interestRate = interestRate;
+        this.currencyUUID = currency;
+        this.dayLimit = dayLimit;
+    }
+
     public UUID getLoanID (){
         return loanUUID;
     }
