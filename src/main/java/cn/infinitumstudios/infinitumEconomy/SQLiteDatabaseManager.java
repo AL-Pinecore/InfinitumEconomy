@@ -217,6 +217,11 @@ class SQLiteDatabaseManager implements IDatabaseManager {
     }
 
     @Override
+    public boolean hasCurrencyVault (UUID currencyUUID){
+        return vaultDB.hasCurrencyVault(currencyUUID);
+    }
+
+    @Override
     public ArrayList<Vault> getVaults (UUID bankUUID) {
         return vaultDB.getVaults(bankUUID);
     }

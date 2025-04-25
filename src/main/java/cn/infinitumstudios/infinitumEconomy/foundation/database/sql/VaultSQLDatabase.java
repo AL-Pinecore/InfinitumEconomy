@@ -28,6 +28,8 @@ public class VaultSQLDatabase {
     }
 
     public ResponseStatus createVault (Vault vault){
+        if (hasVault(vault.getVaultID())) return ResponseStatus.EXISTED;
+        if (hasCurrencyVault(vault.getCurrencyID())) return ResponseStatus.EXISTED;
         return null;
     }
 
@@ -36,6 +38,10 @@ public class VaultSQLDatabase {
     }
 
     public boolean hasVault (UUID vaultUUID){
+        return false;
+    }
+
+    public boolean hasCurrencyVault (UUID currencyUUID){
         return false;
     }
 

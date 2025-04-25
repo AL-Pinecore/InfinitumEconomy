@@ -57,6 +57,7 @@ public interface IDatabaseManager {
     ResponseStatus createVault (Vault vault);
     ResponseStatus deleteVault (UUID vaultUUID);
     boolean hasVault (UUID vaultUUID);
+    boolean hasCurrencyVault (UUID currencyUUID);
     ArrayList<Vault> getVaults (UUID bankUUID);
     @Nullable Vault getVault (UUID vaultUUID);
     ResponseStatus updateVault (Vault vault);
